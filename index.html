@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="src/css/style.css">
+    <link rel="stylesheet" href="src/css/home.css">
+    <link rel="stylesheet" href="src/css/sobre.css">
+
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
     <title>Famed</title>
 </head>
 <body>
     <header>
         <nav class="navbar">
-            <a class="logo-link" href="index.html">
-                <img class="logo" src="src/img/logoprincipal2.png" alt="">
+            <a class="logo-link" href="#home">
+                <img class="logo" src="src/img/logoprincipal2.png" alt="famed-logo">
             </a><!--logo-link-->
 
             <!--botão hambúrguer (visível apenas no mobile)-->
@@ -25,25 +28,81 @@
 
             <div class="famed-menu" id="menu">
                 <ul class="nav-list">
-                    <li><a href="#home">Quem Somos</a></li>
+                    <li><a href="#sobre">Quem Somos</a></li>
                     <li><a href="#">O Problema</a></li>
                     <li><a href="#">Nossa Solução</a></li>
                 </ul><!--nav-list-->
     
                 <div class="nav-buttons">
-                    <button class="btn-login">
+                    <a class="btn-login" href="#">
                         Médicos
-                    </button>
+                    </a>
     
-                    <button class="btn-login">
-                        Farmácia
-                    </button>
+                    <a class="btn-login" href="#">
+                        Farmácias
+                    </a>
                 </div><!--nav-buttons-->
             </div><!--famed-menu-->
         </nav>
     </header>
 
-    <main>
+    <main id="content">
+        <section id="home">
+            <div class="shape"></div><!--shape-->
+            <div id="cta">
+                <h1 class="title">
+                    Prescrições Médicas <span>Digitais</span>
+                </h1>
+
+                <p class="description">
+                    Todo o ciclo de vida de uma receita médica em um só lugar, 
+                    desde a prescrição até a dispensação!
+                </p>
+
+                <div id="cta_buttons">
+                    <a href="#" class="btn-login">
+                        Médicos
+                    </a>
+                    <a href="#" class="btn-login">
+                        Farmácias
+                    </a>
+                </div>
+            </div><!--cta-->
+
+            <div id="banner">
+                <img src="src/img/logoprincipal.png" alt="logo principal">
+            </div><!--banner-->
+        </section><!--home-->
+
+        <section id="sobre">
+            <h1 class="title">Quem Somos</h1>
+            <p class="intro-text">
+                A <span>famed</span> é um ecossistema digital que integra todo o ciclo de vida de uma receita médica, 
+                garantindo segurança e agilidade desde a prescrição à dispensação.
+            </p>
+            
+            <div class="cards-container">
+                <!--Card Médicos-->
+                <div class="card">
+                    <h3>Médicos</h3>
+                    <p>Através da nossa plataforma, buscamos reduzir ao maximo possíveis erros durante a prescrição.</p>
+                </div>
+
+                <!--Card Farmácias-->
+                <div class="card">
+                    <h3>Farmácias</h3>
+                    <p>Fornecemos uma plataforma intuitiva para a vizualização das receitas e baixa dos medicamentos contidos na mesma.</p>
+                </div>
+                <!--Card Pacientes-->
+                <div class="card">
+                    <h3>Pacientes</h3>
+                    <p>
+                        Oferecemos um app mobile onde podem ter o controle total da organização e histórico de suas 
+                        receitas em um só lugar.
+                    </p>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>

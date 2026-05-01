@@ -1,0 +1,53 @@
+#sobre{
+    padding: 60px 8%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    background-color: #eeefff;
+    margin-top: 40px;
+}
+
+#sobre .title{
+    color: #1d1d1d;
+    font-size: 3rem;
+}
+
+.intro-text{
+    max-width: 800px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #000000;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+.cards-container{
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.card{
+    background: #000547;
+    padding: 30px;
+    border-radius: 20px;
+    width: 300px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.card:hover{
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.card h3{
+    color: #dbae00;
+    margin: 15px 0;
+}
+
+.card p{
+    color: #ffffff;
+}

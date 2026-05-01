@@ -6,8 +6,16 @@
     box-sizing: border-box;
 }
 
+section{
+    padding: 0 2rem;;
+}
+
+span{
+    color: #000547;
+}
+
 .navbar{
-    background-color: rgb(0, 5, 71);
+    background-color: #000547;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -87,7 +95,7 @@
 }
 
 .btn-login{
-    background: rgb(219, 174, 0);
+    background: #dbae00;
     color: #110f0f;
     border: none;
     border-radius: 999px;
@@ -98,6 +106,7 @@
     letter-spacing: 0.02em;
     transition: transform 0.3s;
     white-space: nowrap;
+    text-decoration: none;
 }
 
 .btn-login:hover{
