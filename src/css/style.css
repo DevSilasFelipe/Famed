@@ -1,0 +1,205 @@
+
+*{
+    font-family: "Sora", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.navbar{
+    background-color: rgb(0, 5, 71);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 68px;
+    width: 100%;
+    position: relative;
+    z-index: 100;
+}
+
+.logo{
+    height: 200px;
+    width: auto;
+    display: block;
+    flex-shrink: 0;
+}
+
+/* ─── MENU (desktop) ──────────────────── */
+.famed-menu{
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-left: auto;
+}
+
+.nav-list{
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    list-style: none;
+}
+
+/*-----Menu centralizado (desktop)-----*/
+@media (min-width: 769px) {
+    .famed-menu{
+        display: contents; /* faz o wrapper "sumir" e os filhos entram direto no flex da navbar */
+    }
+    .nav-list{
+        flex: 1;
+        justify-content: center;
+    }
+    .nav-buttons{
+        flex: 1;
+        justify-content: flex-end;
+    }
+    .logo{
+        flex: 1;
+        height: 200px;
+        width: auto;
+        object-fit: contain; /* mantém proporção */
+    }
+    .logo-link {
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+}
+
+.nav-list a{
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    transition: color 0.2s ease;
+    cursor: pointer;
+}
+
+.nav-list a:hover{
+    color: rgb(219, 174, 0);
+}
+
+.nav-buttons{
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.btn-login{
+    background: rgb(219, 174, 0);
+    color: #110f0f;
+    border: none;
+    border-radius: 999px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: transform 0.3s;
+    white-space: nowrap;
+}
+
+.btn-login:hover{
+    transform: scale(1.1)
+}
+
+/*-----Menu Hamburguer-----*/
+.famed-hamburguer{
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    z-index: 101;
+}
+
+.famed-hamburguer span{
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #ffffff;
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform-origin: center;
+}
+
+/*-----Animação X ao abrir-----*/
+.famed-hamburguer.active span:nth-child(1){
+    transform: translateY(7px) rotate(45deg);
+}
+
+.famed-hamburguer.active span:nth-child(2){
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.famed-hamburguer.active span:nth-child(3){
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/*-----Menu Responsivo (Mobile <= 768px)-----*/
+@media (max-width: 768px){
+    .famed-hamburguer{
+        display: flex;
+    }
+
+    .famed-menu{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+
+        position: absolute;
+        top: 68px;
+        left: 0;
+        width: 100%;
+        background: rgb(0, 5, 71);
+
+        /*estado fechado*/
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.35s ease, opacity 0.3s ease;
+    }
+
+    .famed-menu.open{
+        max-height: 400px;
+        opacity: 1;
+    }
+
+    .nav-list{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        width: 100%;
+        padding: 1rem 2rem 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-list li{
+        width: 100%;
+        padding: 0.65rem 0;
+    }
+
+    .nav-list a{
+        font-size: 15px;
+    }
+
+    .nav-buttons{
+        width: 100%;
+        flex-direction: column;
+        gap: 0.6rem;
+        padding: 1rem 2rem 1.25rem;
+    }
+
+    .btn-login{
+        width: 100%;
+        text-align: center;
+        padding: 10px 20px;
+    }
+}
