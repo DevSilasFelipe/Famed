@@ -1,0 +1,99 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Sora", sans-serif;;
+}
+
+body{
+    background-color: #000547;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box{
+    background-color: #eeefff;
+    width: 620px;
+    padding: 40px 60px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo{
+    width: 250px;
+    margin-bottom: 40px;
+    margin-top: -15px
+}
+
+form{
+    width: 100%;
+}
+
+.input-group{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+}
+
+.input-group label{
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #1d1d1d;
+}
+
+.input-group input{
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+
+    padding: 0 10px;
+    outline: none;
+    background-color: white;
+}
+
+.senha-area{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.senha-area a{
+    font-size: 14px;
+}
+
+button{
+    width: 240px;
+    height: 50px;
+    display: block;
+    margin: 35px auto 10px auto;
+    border: none;
+    border-radius: 8px;
+    background-color: #000547;
+    color: #ffffff;
+    font-size: 32px;
+    cursor: pointer;
+    transition: 0.3s
+}
+
+button:hover{
+    opacity: 0.9;
+}
+
+.cadastro{
+    font-size: 14px;
+    margin-top: 5px;
+    color: #1d1d1d;
+    
+}
