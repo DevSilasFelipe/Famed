@@ -145,6 +145,11 @@ main{
     margin-bottom: 40px
 }
 
+.card img.prancheta{
+    width: 48px;
+    margin-bottom: 28px;
+}
+
 .card h2{
     font-size: 22px;
     margin-bottom: 6px;
