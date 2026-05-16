@@ -1,5 +1,5 @@
 const hamburguer = document.getElementById('hamburguer');
-const meni = document.getElementById('menu');
+const menu = document.getElementById('menu');
 
 hamburguer.addEventListener('click', () => {
     const isOpen = menu.classList.toggle('open');
@@ -8,10 +8,10 @@ hamburguer.addEventListener('click', () => {
 });
 
 //Fecha o menu ao clicar em um link
-document.querySelectorAll('nav-list a').forEach(link => {
+document.querySelectorAll('.nav-list a').forEach(link => {
     link.addEventListener('click', () => {
         menu.classList.remove('open');
         hamburguer.classList.remove('active');
-        hamburguer.setAttribute('arial-expanded', false);
+        hamburguer.setAttribute('aria-expanded', false);
     });
 });
