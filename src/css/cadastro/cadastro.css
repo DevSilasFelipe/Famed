@@ -1,0 +1,137 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Sora', sans-serif;
+}
+
+body{
+    background-color: #000547;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 0;
+}
+
+.container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cadastro-box{
+    background-color: #eeefff;
+    width: 700px;
+    padding: 40px 60px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo{
+    width: 250px;
+    margin-bottom: 30px;
+    margin-top: -15px;
+}
+
+.tipo-conta{
+    width: 100%;
+    margin-bottom: 35px;
+}
+
+.tipo-conta p{
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: #1d1d1d;
+}
+
+.tipo-botoes{
+    display: flex;
+    gap: 15px;
+}
+
+.tipo-btn{
+    flex: 1;
+    height: 45px;
+    border: 2px solid #000547;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #000547;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.tipo-btn:hover{
+    transform: scale(1.05);
+}
+
+.tipo-btn.active{
+    background-color: #000547;
+    color: #ffffff;
+}
+
+form{
+    width: 100%;
+}
+
+.formulario{
+    width: 100%;
+}
+
+.hidden{
+    display: none;
+}
+
+.input-group{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 22px;
+}
+
+.input-group label{
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #1d1d1d;
+}
+
+.input-group input{
+    height: 42px;
+    border: none;
+    border-radius: 5px;
+    padding: 0 10px;
+    outline: none;
+    background-color: #ffffff;
+}
+
+.linha{
+    display: flex;
+    gap: 15px;
+}
+
+.pequeno{
+    width: 120px;
+}
+
+.continuar-btn{
+    width: 240px;
+    height: 50px;
+    display: block;
+    margin: 35px auto 10px auto;
+    border: none;
+    border-radius: 8px;
+    background-color: #000547;
+    color: #ffffff;
+    font-size: 32px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.continuar-btn:hover{
+    opacity: 0.9s;
+}
