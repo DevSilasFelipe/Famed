@@ -1,31 +1,21 @@
-//Vericar se ja existe uma sessão
-verificarSessao();
-
-function fazerLogin(event) {
-    //Impede o recarregamento do form
+function fazerLogin(event){
+    //impede reload do form
     event.preventDefault();
 
-    //Pegar os valores digitados no formlário
+    //captura valores
     let usuario = document.getElementById("email").value;
-    let senha = document.getElementById("senha").value;
+    let senha   = document.getElementById("senha").value;
 
-    //validar usuário
-    if (usuario === "admin" && senha === "123") {
-        //Criar a sessao
-        sessionStorage.setItem("usuarioLogado", usuario);
+    //login fake temporário
+    if (usuario === "teste@medico.com" && senha === "123"){
 
-        //abrir pagina de sistema
-        window.location.href = "../medico/inicio.html"
-    } else {
-        alert("usuário ou senha inválidos!")
+        //salva sessão
+        sessionStorage.setItem("usuarioLogado", "true");
+        sessionStorage.setItem("tipoUsuario", "medico");
+
+        //redireciona
+        window.location.replace("../medico/inicio.html");
+    } else{
+        alert("Usuário ou senha inválidos!");
     }
 }
-
-function verificarSessao(){
-    //procurar sessao salva
-    let usuario = sessionStorage.getItem("usuarioLogado");
-
-    if(usuario){
-        window.location.href = "../medico/inicio.html"
-    }
-};
