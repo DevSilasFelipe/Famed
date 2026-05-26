@@ -1,247 +1,273 @@
-    /* =========================
-       RESET
-    ========================== */
-    *{
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
-    }
+/* =========================
+    RESET
+========================== */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Sora", sans-serif;
+}
 
-    /* =========================
-       BODY
-    ========================== */
-    body{
-      min-height: 100vh;
+/* =========================
+    BODY
+========================== */
+body {
+  min-height: 100vh;
 
-      background: #d9d9e6;
+  background: #eeefff;
 
-      display: flex;
-      flex-direction: column;
-    }
+  display: flex;
+  flex-direction: column;
+}
 
-    /* =========================
-       HEADER
-    ========================== */
-    .header{
-      width: 100%;
-      height: 110px;
+.navbar {
+  width: 100%;
+  height: 85px;
+  background-color: #000547;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 60px;
+}
 
-      background: #02045f;
+.logo img {
+  width: 150px;
+}
 
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+.menu {
+  display: flex;
+  gap: 40px;
+  margin-left: -100px;
+}
 
-      padding: 0 120px;
-    }
+.menu a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
 
-    /* =========================
-       LOGO HEADER
-    ========================== */
-    .logo-area{
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
+.menu a:hover {
+  color: #dbae00;
+}
 
-    .header-logo{
-      width: 320px;
-      height: auto;
-      object-fit: contain;
-    }
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
 
-    .logo-title{
-      color: white;
-      font-size: 32px;
-      font-weight: bold;
-    }
+.perfil-area {
+  position: relative;
+}
 
-    /* =========================
-       ÍCONE USUÁRIO
-    ========================== */
-    .user-icon{
-      width: 76px;
-      height: 76px;
+.perfil {
+  width: 45px;
+  height: 45px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-      background: white;
+  border: none;
+  cursor: pointer;
+}
 
-      border-radius: 50%;
+.menu-perfil {
+  position: absolute;
+  top: 55px;
+  right: 0;
+  width: 140px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 9, 0, 0.15);
+  padding: 10px;
+  display: none;
+}
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+.menu-perfil.ativo {
+  display: block;
+}
 
-      color: #02045f;
+.menu-perfil button {
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.2s;
+  color: #000547;
+}
 
-      cursor: pointer;
-    }
+.menu-perfil button:hover {
+  background-color: #f2f2f2f2;
+}
 
-    /* =========================
-       CONTEÚDO CENTRAL
-    ========================== */
-    .container{
-      flex: 1;
+.perfil img {
+  width: 25px;
+}
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+/* =========================
+    CONTEÚDO CENTRAL
+========================== */
+.container {
+  flex: 1;
 
-      padding: 40px 20px;
-    }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    /* =========================
-       CAIXA TOKEN
-    ========================== */
-    .token-box{
-      width: 65%;
-      max-width: 950px;
-      height: 105px;
+  padding: 40px 20px;
+}
 
-      background: #02045f;
+/* =========================
+    CAIXA TOKEN
+========================== */
+.token-box {
+  width: 65%;
+  max-width: 950px;
+  height: 75px;
 
-      border-radius: 40px;
+  background: #02045f;
 
-      display: flex;
-      align-items: center;
+  border-radius: 40px;
 
-      padding: 0 40px;
-    }
+  display: flex;
+  align-items: center;
 
-    /* =========================
-       INPUT
-    ========================== */
-    .token-input{
-      flex: 1;
+  padding: 0 40px;
+}
 
-      border: none;
-      outline: none;
+/* =========================
+    INPUT
+========================== */
+.token-input {
+  flex: 1;
 
-      background: transparent;
+  border: none;
+  outline: none;
 
-      color: white;
-      font-size: 26px;
-    }
+  background: transparent;
 
-    .token-input::placeholder{
-      color: white;
-    }
+  color: white;
+  font-size: 16px;
+}
 
-    /* =========================
-       BOTÃO
-    ========================== */
-    .arrow-button{
-      border: none;
-      background: transparent;
+.token-input::placeholder {
+  color: #ffffff;
+}
 
-      color: white;
+/* =========================
+    BOTÃO
+========================== */
+.arrow-button {
+  border: none;
+  background: transparent;
 
-      font-size: 60px;
+  color: white;
 
-      cursor: pointer;
+  font-size: 60px;
 
-      margin-left: 20px;
-    }
+  cursor: pointer;
 
-    /* =========================
-       FOOTER
-    ========================== */
-    footer{
-      width: 100%;
-      min-height: 90px;
+  margin-left: 20px;
+  margin-top: -13px
+}
 
-      background: #02045f;
+.footer{
+    width: 100%;
+    height: 65px;
+    background-color: #000547;
 
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
+    position: relative;
 
-    }
+    display: flex;
+    align-items: center;
+    padding: 0 60px;
+}
 
-    /* =========================
-       LOGO FOOTER
-    ========================== */
-    .footer-logo{
-      width: 220px;
-      height: auto;
-      object-fit: contain;
-    }
+.footer img{
+    width: 120px;
+}
 
-    /* =========================
-       LINKS FOOTER
-    ========================== */
-    .footer-links{
-      display: flex;
-      gap: 100px;
-    }
+.footer-links{
+    position: absolute;
 
-    .footer-links a{
-      color: white;
-      text-decoration: none;
+    left: 50%;
+    transform: translateX(-50%);
 
-      font-size: 18px;
-      font-weight: bold;
+    display: flex;
+    gap: 60px;
+}
 
-      transition: 0.3s;
-    }
+.footer-links a{
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 14px;
+    transition: color 0.2s ease;
+}
 
-    .footer-links a:hover{
-      opacity: 0.7;
-    }
+.footer a:hover{
+    color: #dbae00;
+}
 
-    /* =========================
-       RESPONSIVO
-    ========================== */
-    @media (max-width: 900px){
+/* =========================
+    RESPONSIVO
+========================== */
+@media (max-width: 900px) {
 
-      .header{
-        padding: 0 30px;
-      }
+  .header {
+    padding: 0 30px;
+  }
 
-      .header-logo{
-        width: 180px;
-      }
+  .header-logo {
+    width: 180px;
+  }
 
-      .logo-title{
-        font-size: 24px;
-      }
+  .logo-title {
+    font-size: 24px;
+  }
 
-      .user-icon{
-        width: 60px;
-        height: 60px;
-      }
+  .user-icon {
+    width: 60px;
+    height: 60px;
+  }
 
-      .token-box{
-        width: 100%;
-        height: 85px;
+  .token-box {
+    width: 100%;
+    height: 85px;
 
-        border-radius: 25px;
-      }
+    border-radius: 25px;
+  }
 
-      .token-input{
-        font-size: 20px;
-      }
+  .token-input {
+    font-size: 20px;
+  }
 
-      .arrow-button{
-        font-size: 45px;
-      }
+  .arrow-button {
+    font-size: 45px;
+  }
 
-      footer{
-        flex-direction: column;
-        gap: 25px;
-      }
+  footer {
+    flex-direction: column;
+    gap: 25px;
+  }
 
-      .footer-logo{
-        width: 170px;
-      }
+  .footer-logo {
+    width: 170px;
+  }
 
-      .footer-links{
-        gap: 30px;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
+  .footer-links {
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 
-      .footer-links a{
-        font-size: 16px;
-      }
-    }
+  .footer-links a {
+    font-size: 16px;
+  }
+}

@@ -6,51 +6,35 @@
 
   <title>Famed | Farmácias</title>
   <link rel="stylesheet" href="../../css/farmacia/farmacia.css">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
 
-  <!-- =========================
-       HEADER
-  ========================== -->
-  <header class="header">
+  <header class="navbar">
+        <div class="logo">
+            <img src="../../img/logo2.png" alt="Logo Famed">
+        </div><!--logo-->
 
-    <div class="logo-area">
+        <nav class="menu">
+            <a href="#">Receitas Dispensadas</a>
+        </nav><!--menu-->
 
-      <img
-        src="../../img/logoprincipal2.png"
-        alt="Logo Famed"
-        class="header-logo"
-      >
+        <div class="nav-actions">
+            <div class="perfil-area">
+                <button class="perfil" id="btnPerfil">
+                    <img src="../../img/perfil.png" alt="Perfil">
+                </button>
 
-      <h1 class="logo-title">
-        Farmácia
-      </h1>
-
-    </div>
-
-    <!-- Usuário -->
-    <div class="user-icon">
-
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="42"
-        height="42"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        stroke-width="1.8"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M15.75 6.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zm4.5 13.5a8.25 8.25 0 10-16.5 0h16.5z"
-        />
-      </svg>
-
-    </div>
-
-  </header>
+                <div class="menu-perfil" id="menuPerfil">
+                    <button onclick="logout()">
+                        Sair
+                    </button>
+                </div><!--menuPerfil-->
+            </div><!--perfil-area-->
+        </div><!--nav-actions-->
+    </header><!--navbar-->
 
   <!-- =========================
        CONTEÚDO
@@ -76,38 +60,22 @@
   <!-- =========================
        FOOTER
   ========================== -->
-  <footer>
+  <footer class="footer">
+        <img src="../../img/logobranca.png" alt="Logo Famed Branca">
 
-    <!-- Logo -->
-    <img
-      src="../../img/logoprincipal2.png"
-      alt="Logo Famed"
-      class="footer-logo"
-    >
-
-    <!-- Links -->
-    <div class="footer-links">
-
-      <a href="#">
-        FAQ
-      </a>
-
-      <a href="#">
-        Termos de Uso
-      </a>
-
-      <a href="#">
-        Política de Privacidade
-      </a>
-
-    </div>
-
-  </footer>
+        <div class="footer-links">
+            <a href="#">Ajuda</a>
+            <a href="#">Termos de Uso</a>
+            <a href="#">Política de Privacidade</a>
+        </div><!--footer-links-->
+    </footer>
 
   <script src="../../js/login/protecao.js"></script>
+  <script src="../../js/login/menuPerfil.js"></script>
 
   <script>
     verificarLogin("farmacia");
+    iniciarMenuPerfil();
   </script>
 </body>
 </html>
