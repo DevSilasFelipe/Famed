@@ -109,6 +109,7 @@ main{
     padding: 10px;
     border-radius: 10px;
     transition: 0.2s;
+    cursor: pointer;
 }
 
 .botao:hover {
