@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
 
 
-    <title>Famed | Médicos</title>
+    <title>Famed | Criar Prescrição</title>
 </head>
 <body>
     <header class="navbar">
@@ -33,27 +33,43 @@
     </header><!--navbar-->
 
     <main class="main">
-        <div class="titulo">
-            <h1>Nova Prescrição</h1>
-        </div><!--titulo-->
+        <h1 class="titulo">Nova Prescrição</h1>
 
         <section>
             <div class="card">
-                <!--formularios-->
-                <form class="form">
+                <!--formularios que nao sao formularios-->
+                <div class="campo">
                     <label for="NomeCliente">Paciente</label><br>
                         <input type="text" id="NomeCliente" name="NomeCliente" placeholder="Nome Completo"><br>
-                    <label for="CPF">CPF</label><br>
-                        <input type="text" id="CPF" name="CPF" placeholder="000.000.000-00" maxlength="11"><br>
-                    <label for="TipoReceita">Tipo da Receita</label><br>
-                        <select id="TipoReceita" name="TipoReceita" required>
-                            <option selected disabled>Selecionar</option>
-                            <option>Comum</option>
-                            <option>Antimicrobianos</option>
-                            <option>Controle Especial (C1)</option>
-                        </select><br>
+                </div>
+                <div class="campo">
+                        <label for="CPF">CPF</label>
+                            <input type="text" id="CPF" name="CPF" placeholder="000.000.000-00" maxlength="11"><br>
+                <div class="linha">
+                    <div class=" display tipoReceita">
+                        <label for="TipoReceita">Tipo da Receita</label><br>
+                            <select id="TipoReceita" name="TipoReceita" required>
+                                <option selected disabled>Selecionar</option>
+                                <option>Comum</option>
+                                <option>Antimicrobianos</option>
+                                <option>Controle Especial (C1)</option>
+                            </select>
+                    </div>
+                    <div class="display medicamento">       
                         <label for="Medicamento">Medicamento</label><br>
-                        <input type="search" id="Medicamento" name="Medicamento" placeholder="Pesquisar">
+                            <input type="search" id="Medicamento" name="Medicamento" placeholder="Buscar"><br>
+                    </div>    
+                    <div class="display quantidade">
+                        <label for="Quantidade">Quantidade</label><br>
+                            <input type="text" id="Quantidade" name="Quantidade"><br><br>
+                    </div>    
+                </div>
+                <div class="campo">
+                    <label for="Posologia">Posologia</label>
+                        <input type="text" id="Posologia" name="Posologia">
+                </div>
+                    <input type="submit" value="Gerar prescrição" class="botao">
+
                 </form>
             </div>
         </section>
