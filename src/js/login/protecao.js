@@ -41,4 +41,12 @@ window.addEventListener("pageshow", function(event){
     ){
         window.location.replace("../login/login.html");
     }
+
+    //proteção paciente
+    if(
+        paginaAtual.includes("/paciente/") &&
+        tipoUsuario !== "paciente"
+    ){
+        window.location.replace("../login/login.html");
+    }
 });

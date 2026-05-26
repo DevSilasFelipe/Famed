@@ -27,7 +27,19 @@ function fazerLogin(event){
 
         window.location.replace("../farmacia/farmacia.html");
 
-        return
+        return;
+    }
+
+    //login fake temporário PACIENTE
+    if(usuario === "teste@paciente.com" && senha === "123"){
+
+        //salva sessão
+        sessionStorage.setItem("usuarioLogado", "true");
+        sessionStorage.setItem("tipoUsuario", "paciente");
+
+        window.location.replace("../paciente/inicio.html");
+
+        return;    
     }
 
     //login inválido
