@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="../../css/paciente/inicio.css">
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <header class="navbar">
         <div class="logo">
@@ -19,59 +21,67 @@
         </nav><!--menu-->
 
         <div class="nav-actions">
-            <a href="#" class="perfil">
-                <img src="../../img/perfil.png" alt="Perfil">
-            </a>
+            <div class="perfil-area">
+                <button class="perfil" id="btnPerfil">
+                    <img src="../../img/perfil.png" alt="Perfil">
+                </button>
+
+                <div class="menu-perfil" id="menuPerfil">
+                    <button onclick="logout()">
+                        Sair
+                    </button>
+                </div><!--menuPerfil-->
+            </div><!--perfil-area-->
         </div><!--nav-actions-->
     </header><!--navbar-->
 
     <main>
         <section class="cards">
-                <a href="#" class="card">
-                        <div class="forma"></div>
-                            <div class="textocard">
-                                <h2>Antibiótico</h2>
-                            </div>
-                            <div class="textocard4">
-                                <p>Médico: ____</p>
-                            </div>
-                            <div class="textocard2">
-                                <p>Token: ____</p>
-                            </div>
-                            <div class="textocard3">
-                                <h3>Expandir</h3>
-                            </div>
-                </a>
-                <a href="#" class="card">
-                        <div class="forma2"></div>
-                            <div class="textocard">
-                                <h2>Controlado</h2>
-                            </div>
-                            <div class="textocard4">
-                                <p>Médico: ____</p>
-                            </div>
-                            <div class="textocard2">
-                                <p>Token: ____</p>
-                            </div>
-                            <div class="textocard3">
-                            <h3>Expandir</h3>
-                            </div>
-                </a>
-                <a href="#" class="card">
-                        <div class="forma3"></div>
-                            <div class="textocard">
-                                <h2>Comum</h2>
-                            </div>
-                            <div class="textocard4">
-                                <p>Médico: ____</p>
-                            </div>
-                            <div class="textocard2">
-                                <p>Token: ____</p>
-                            </div>
-                                <div class="textocard3">
-                            <h3>Expandir</h3>
-                            </div>
-                </a>
+            <a href="#" class="card">
+                <div class="forma"></div>
+                <div class="textocard">
+                    <h2>Antibiótico</h2>
+                </div>
+                <div class="textocard4">
+                    <p>Médico: ____</p>
+                </div>
+                <div class="textocard2">
+                    <p>Token: ____</p>
+                </div>
+                <div class="textocard3">
+                    <h3>Expandir</h3>
+                </div>
+            </a>
+            <a href="#" class="card">
+                <div class="forma2"></div>
+                <div class="textocard">
+                    <h2>Controlado</h2>
+                </div>
+                <div class="textocard4">
+                    <p>Médico: ____</p>
+                </div>
+                <div class="textocard2">
+                    <p>Token: ____</p>
+                </div>
+                <div class="textocard3">
+                    <h3>Expandir</h3>
+                </div>
+            </a>
+            <a href="#" class="card">
+                <div class="forma3"></div>
+                <div class="textocard">
+                    <h2>Comum</h2>
+                </div>
+                <div class="textocard4">
+                    <p>Médico: ____</p>
+                </div>
+                <div class="textocard2">
+                    <p>Token: ____</p>
+                </div>
+                <div class="textocard3">
+                    <h3>Expandir</h3>
+                </div>
+            </a>
         </section>
     </main>
 
@@ -84,9 +94,13 @@
             <a href="#">Política de Privacidade</a>
         </div><!--footer-links-->
     </footer>
+
+    <script src="../../js/login/protecao.js"></script>
+    <script src="../../js/login/menuPerfil.js"></script>
+
+    <script>
+        verificarLogin("paciente");
+        iniciarMenuPerfil();
+    </script>
 </body>
-
-
-
-
 </html>

@@ -26,9 +26,17 @@
                 CRIAR
             </a>
             
-            <a href="#" class="perfil">
-                <img src="../../img/perfil.png" alt="Perfil">
-            </a>
+            <div class="perfil-area">
+                <button class="perfil" id="btnPerfil">
+                    <img src="../../img/perfil.png" alt="Perfil">
+                </button>
+
+                <div class="menu-perfil" id="menuPerfil">
+                    <button onclick="logout()">
+                        Sair
+                    </button>
+                </div><!--menuPerfil-->
+            </div><!--perfil-area-->
         </div><!--nav-actions-->
     </header><!--navbar-->
 
@@ -51,7 +59,7 @@
             </a>
 
             <!-- CARD 2 -->
-            <a href="#" class="card">
+            <a href="historico.html" class="card">
                 <div class="forma"></div>
 
                 <img src="../../img/historico.png" alt="Ver Histórico">
@@ -82,5 +90,13 @@
             <a href="#">Política de Privacidade</a>
         </div><!--footer-links-->
     </footer>
+
+    <script src="../../js/login/protecao.js"></script>
+    <script src="../../js/login/menuPerfil.js"></script>
+
+    <script>
+        verificarLogin("medico");
+        iniciarMenuPerfil();
+    </script>
 </body>
 </html>
