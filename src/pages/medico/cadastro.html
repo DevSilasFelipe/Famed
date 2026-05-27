@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../css/medico/cadastro.css">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
+
+    <title>Famed | Médicos</title>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="../../img/logo2.png" alt="Logo Famed">
+        </div><!--logo-->
+
+        <nav class="menu">
+            <a href="inicio.html">Home</a>
+            <a href="historico.html">Minhas Receitas</a>
+        </nav><!--menu-->
+
+        <div class="nav-actions">
+            <a href="prescricao.html" class="btn-criar">
+                CRIAR
+            </a>
+            
+            <div class="perfil-area">
+                <button class="perfil" id="btnPerfil">
+                    <img src="../../img/perfil.png" alt="Perfil">
+                </button>
+
+                <div class="menu-perfil" id="menuPerfil">
+                    <button onclick="logout()">
+                        Sair
+                    </button>
+                </div><!--menuPerfil-->
+            </div><!--perfil-area-->
+        </div><!--nav-actions-->
+    </header>
+
+    <main>
+        <h1 class="titulo">Novo Paciente</h1>
+
+        <section>
+            <div class="card">
+                <!--formularios que nao sao formularios-->
+                <div class="campo">
+                    <label for="NomeCliente">Paciente</label><br>
+                    <input type="text" id="NomeCliente" name="NomeCliente" placeholder="Nome Completo"><br>
+                </div>
+
+                <div class="campo">
+                    <label for="CPF">CPF</label>
+                    <input type="text" id="CPF" name="CPF" placeholder="000.000.000-00" maxlength="11"><br>
+                    
+                    <div class="linha">
+                        <!-- GÊNERO -->
+                        <div class="display genero">
+                            <label for="Genero">Gênero</label><br>
+
+                            <select id="Genero" name="Genero" required>
+                                <option selected disabled>Selecionar</option>
+                                <option>Masculino</option>
+                                <option>Feminino</option>
+                            </select>
+                        </div>
+
+                        <!-- ENDEREÇO -->
+                        <div class="display endereco">
+                            <label for="Endereco">Endereço</label><br>
+
+                            <input type="text" id="Endereco" name="Endereco" placeholder="Rua, Avenida...">
+                        </div>
+
+                    </div>
+
+                    <!-- SEGUNDA LINHA -->
+                    <div class="linha">
+
+                        <!-- NÚMERO -->
+                        <div class="display numero">
+                            <label for="Numero">Número</label><br>
+
+                            <input type="text" id="Numero" name="Numero" placeholder="123">
+                        </div>
+
+                        <!-- COMPLEMENTO -->
+                        <div class="display complemento">
+                            <label for="Complemento">Complemento</label><br>
+
+                            <input type="text" id="Complemento" name="Complemento" placeholder="Apartamento, bloco...">
+                        </div>
+
+                        <!-- UF -->
+                        <div class="display uf">
+                            <label for="UF">UF</label><br>
+
+                            <select id="UF" name="UF">
+                                <option selected disabled>UF</option>
+
+                                <option>AC</option>
+                                <option>AL</option>
+                                <option>AP</option>
+                                <option>AM</option>
+                                <option>BA</option>
+                                <option>CE</option>
+                                <option>DF</option>
+                                <option>ES</option>
+                                <option>GO</option>
+                                <option>MA</option>
+                                <option>MT</option>
+                                <option>MS</option>
+                                <option>MG</option>
+                                <option>PA</option>
+                                <option>PB</option>
+                                <option>PR</option>
+                                <option>PE</option>
+                                <option>PI</option>
+                                <option>RJ</option>
+                                <option>RN</option>
+                                <option>RS</option>
+                                <option>RO</option>
+                                <option>RR</option>
+                                <option>SC</option>
+                                <option>SP</option>
+                                <option>SE</option>
+                                <option>TO</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <input type="submit" value="Cadastrar Paciente" class="botao">
+
+                    </form>
+                </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <img src="../../img/logobranca.png" alt="Logo Famed Branca">
+
+        <div class="footer-links">
+            <a href="#">Ajuda</a>
+            <a href="#">Termos de Uso</a>
+            <a href="#">Política de Privacidade</a>
+        </div>
+    </footer>
+    
+    <script src="../../js/login/protecao.js"></script>
+    <script src="../../js/login/menuPerfil.js"></script>
+
+    <script>
+        verificarLogin("medico");
+        iniciarMenuPerfil();
+    </script>
+</body>
+</html>
