@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body } from "@nestjs/common";
 import { ListaControleService } from "./lista-controle.service";
-import { CriarListaControleDto } from "../common/dto/criar-lista-controle.dto";
+import { CriarListaControleDto } from "./dto/criar-lista-controle.dto";
 
 @Controller('lista-controle')
 export class ListaControleController {
