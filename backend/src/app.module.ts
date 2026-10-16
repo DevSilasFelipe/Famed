@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HealthController } from './health.controller';
 import { ListaControleModule } from './lista-controle/lista-controle.module';
 import { AuditoriaModule } from './auditoria/auditoria.module';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -23,7 +24,8 @@ import { AuditoriaModule } from './auditoria/auditoria.module';
             }),
 
             ListaControleModule,
-            AuditoriaModule
+            AuditoriaModule,
+            AuthModule
   ],
   controllers: [HealthController],
   providers: [],
