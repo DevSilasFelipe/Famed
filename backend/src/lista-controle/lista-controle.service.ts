@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ListaControle } from "./lista-controle.entity";
-import { CriarListaControleDto } from "../common/dto/criar-lista-controle.dto";
+import { CriarListaControleDto } from "./dto/criar-lista-controle.dto";
 
 @Injectable()
 export class ListaControleService {
