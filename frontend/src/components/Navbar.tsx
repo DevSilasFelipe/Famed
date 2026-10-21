@@ -2,18 +2,28 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.css";
 
-export default function Navbar() {
+export interface LinkNavbar {
+    to: string;
+    texto: string;
+}
+
+export interface NavbarProps {
+    links: LinkNavbar[];
+    acao?: LinkNavbar;
+}
+
+export default function Navbar({ links, acao }: NavbarProps) {
     const [menuAberto, setMenuAberto] = useState(false);
     const areaPerfilRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
-    
+
     useEffect(() => {
     function fecharAoClicarFora(event: MouseEvent) {
         if (
-            areaPerfilRef.current &&
-            !areaPerfilRef.current.contains(event.target as Node)
+        areaPerfilRef.current &&
+        !areaPerfilRef.current.contains(event.target as Node)
         ) {
-            setMenuAberto(false);
+        setMenuAberto(false);
         }
     }
 
@@ -22,27 +32,31 @@ export default function Navbar() {
     }, []);
 
     function sair() {
-        sessionStorage.removeItem("usuarioLogado");
-        sessionStorage.removeItem("tipoUsuario");
-        navigate("/login");
+    sessionStorage.removeItem("usuarioLogado");
+    sessionStorage.removeItem("tipoUsuario");
+    navigate("/login");
     }
 
     return (
     <header className={styles.navbar}>
         <div className={styles.logo}>
-            <img src="/img/logo2.png" alt="Logo Famed" />
+        <img src="/img/logo2.png" alt="Logo Famed" />
         </div>
 
         <nav className={styles.menu}>
-            <Link to="/medico">Home</Link>
-            <Link to="/medico/pacientes">Meus Pacientes</Link>
-            <Link to="/medico/receitas">Minhas Receitas</Link>
+        {links.map((link) => (
+            <Link key={link.to} to={link.to}>
+            {link.texto}
+            </Link>
+        ))}
         </nav>
 
         <div className={styles.navActions}>
-        <Link to="/medico/prescricao" className={styles.btnCriar}>
-            CRIAR
-        </Link>
+        {acao && (
+            <Link to={acao.to} className={styles.btnCriar}>
+            {acao.texto}
+            </Link>
+        )}
 
         <div className={styles.perfilArea} ref={areaPerfilRef}>
             <button
@@ -52,13 +66,13 @@ export default function Navbar() {
             <img src="/img/perfil.png" alt="Perfil" />
             </button>
 
-        <div
+            <div
             className={`${styles.menuPerfil} ${menuAberto ? styles.ativo : ""}`}
-        >
+            >
             <button onClick={sair}>Sair</button>
+            </div>
         </div>
         </div>
-    </div>
     </header>
     );
 }
