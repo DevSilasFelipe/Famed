@@ -1,0 +1,60 @@
+.card {
+    width: 260px;
+    height: 200px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: #1d1d1d;
+    transition: 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.faixa {
+    height: 40px;
+}
+
+.antibiotico {
+    background-color: #dbae00;
+}
+
+.controlado {
+    background-color: #bf1736;
+}
+
+.comum {
+    background-color: #195eb9;
+}
+
+.corpo {
+    flex: 1;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
+
+.corpo h2 {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.corpo p {
+    font-size: 14px;
+}
+
+.expandir {
+    border: none;
+    background: none;
+    font-size: 16px;
+    font-weight: 700;
+    color: #000547;
+    cursor: pointer;
+}

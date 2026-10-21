@@ -6,8 +6,7 @@ export default function Navbar() {
     const [menuAberto, setMenuAberto] = useState(false);
     const areaPerfilRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
-
-  // Fecha o menu do perfil ao clicar fora dele
+    
     useEffect(() => {
     function fecharAoClicarFora(event: MouseEvent) {
         if (
