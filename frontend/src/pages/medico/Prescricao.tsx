@@ -3,6 +3,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import type { TipoReceita } from "../../components/CardReceita";
 import formulario from "../../styles/Formulario.module.css";
 import styles from "./Prescricao.module.css";
+import { somenteNumeros } from "../../utils/formatadores";
 
 interface FormPrescricao {
     paciente: string;
@@ -30,10 +31,9 @@ export default function Prescricao() {
         setForm((anterior) => ({ ...anterior, [name]: value }));
     }
 
-    function atualizarCpf(e: ChangeEvent<HTMLInputElement>) {
-        const somenteNumeros = e.target.value.replace(/\D/g, "");
-        setForm((anterior) => ({ ...anterior, cpf: somenteNumeros }));
-    }
+function atualizarCpf(e: ChangeEvent<HTMLInputElement>) {
+    setForm((anterior) => ({ ...anterior, cpf: somenteNumeros(e.target.value) }));
+}
 
     function enviar(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
