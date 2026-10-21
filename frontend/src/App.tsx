@@ -1,3 +1,12 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+
 export default function App() {
-  return <h1>Famed</h1>;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/medico" element={<Navbar />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
