@@ -1,0 +1,58 @@
+.pagina {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.caixa {
+    width: 65%;
+    max-width: 950px;
+    height: 75px;
+    background: #02045f;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+}
+
+.campo {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.campo::placeholder {
+    color: #ffffff;
+}
+
+.seta {
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 40px;
+    line-height: 1;
+    cursor: pointer;
+    margin-left: 20px;
+    transition: transform 0.2s;
+}
+
+.seta:hover {
+    transform: translateX(4px);
+}
+
+@media (max-width: 900px) {
+    .caixa {
+    width: 100%;
+    height: 85px;
+    border-radius: 25px;
+    }
+
+    .campo {
+    font-size: 20px;
+    }
+}

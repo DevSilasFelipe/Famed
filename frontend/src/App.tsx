@@ -6,6 +6,7 @@ import Historico from "./pages/medico/Historico";
 import Prescricao from "./pages/medico/Prescricao";
 import CadastrarPaciente from "./pages/medico/CadastrarPaciente";
 import MinhasReceitas from "./pages/paciente/MinhasReceitas";
+import BuscarReceita from "./pages/farmacia/BuscarReceita";
 
 const menuMedico: NavbarProps = {
   links: [
@@ -23,6 +24,13 @@ const menuPaciente: NavbarProps = {
   ],
 };
 
+const menuFarmacia: NavbarProps = {
+  links: [
+    { to: "/farmacia", texto: "Buscar Receita" },
+    { to: "/farmacia/dispensadas", texto: "Receitas Dispensadas" },
+  ],
+};
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -37,6 +45,10 @@ export default function App() {
         <Route path="/paciente" element={<Layout {...menuPaciente} />}>
           <Route index element={<MinhasReceitas />} />
           <Route path="farmacias" element={<h1>Farmácias Perto</h1>} />
+        </Route>
+        <Route path="/farmacia" element={<Layout {...menuFarmacia} />}>
+          <Route index element={<BuscarReceita />} />
+          <Route path="dispensadas" element={<h1>Receitas Dispensadas</h1>} />
         </Route>
       </Routes>
     </BrowserRouter>
