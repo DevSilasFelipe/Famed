@@ -1,0 +1,83 @@
+.pagina {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px;
+}
+
+.titulo {
+    text-align: center;
+    font-size: 48px;
+    color: #1d1d1d;
+    margin-bottom: 60px;
+}
+
+.card {
+    width: 100%;
+    max-width: 1150px;
+    background: #e9e8f8;
+    border-radius: 20px;
+    padding: 40px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+}
+
+.grupo {
+    display: flex;
+    flex-direction: column;
+}
+
+.linha {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.card label {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.card input,
+.card select {
+    height: 60px;
+    border-radius: 20px;
+    border: 1px solid #999;
+    padding: 0 18px;
+    font-size: 20px;
+    outline: none;
+}
+
+.botao {
+    border: none;
+    background-color: #dbae00;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.botao:hover {
+    transform: scale(1.03);
+}
+
+@media (max-width: 950px) {
+    .pagina {
+        padding: 30px 20px;
+    }
+
+    .titulo {
+        font-size: 36px;
+    }
+
+    .linha {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,17 @@
+.tipoReceita {
+    flex: 1;
+}
+
+.medicamento {
+    flex: 1;
+}
+
+.quantidade {
+    width: 220px;
+}
+
+@media (max-width: 950px) {
+    .quantidade {
+        width: 100%;
+    }
+}
