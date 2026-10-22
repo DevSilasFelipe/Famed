@@ -7,6 +7,7 @@ import { AuditoriaModule } from './auditoria/auditoria.module';
 import { AuthModule } from './auth/auth.module';
 import { PacienteModule } from './paciente/paciente.module';
 import { FarmaciaModule } from './farmacia/farmacia.module';
+import { MedicoModule } from './medico/medico.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),
@@ -29,6 +30,7 @@ import { FarmaciaModule } from './farmacia/farmacia.module';
             AuthModule,
             PacienteModule,
             FarmaciaModule,
+            MedicoModule,
   ],
   controllers: [HealthController],
   providers: [],
