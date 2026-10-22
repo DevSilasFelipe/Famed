@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.css";
+import { encerrarSessao } from "../auth/sessao";
 
 export interface LinkNavbar {
     to: string;
@@ -32,9 +33,8 @@ export default function Navbar({ links, acao }: NavbarProps) {
     }, []);
 
     function sair() {
-    sessionStorage.removeItem("usuarioLogado");
-    sessionStorage.removeItem("tipoUsuario");
-    navigate("/login");
+        encerrarSessao();
+        navigate("/login");
     }
 
     return (
