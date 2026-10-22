@@ -5,7 +5,9 @@ import { HealthController } from './health.controller';
 import { ListaControleModule } from './lista-controle/lista-controle.module';
 import { AuditoriaModule } from './auditoria/auditoria.module';
 import { AuthModule } from './auth/auth.module';
-
+import { PacienteModule } from './paciente/paciente.module';
+import { FarmaciaModule } from './farmacia/farmacia.module';
+import { MedicoModule } from './medico/medico.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),
@@ -25,7 +27,10 @@ import { AuthModule } from './auth/auth.module';
 
             ListaControleModule,
             AuditoriaModule,
-            AuthModule
+            AuthModule,
+            PacienteModule,
+            FarmaciaModule,
+            MedicoModule,
   ],
   controllers: [HealthController],
   providers: [],
