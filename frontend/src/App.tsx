@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./layouts/Layout";
 import RotaProtegida from "./components/RotaProtegida";
 import type { NavbarProps } from "./components/Navbar";
@@ -9,6 +9,8 @@ import Prescricao from "./pages/medico/Prescricao";
 import CadastrarPaciente from "./pages/medico/CadastrarPaciente";
 import MinhasReceitas from "./pages/paciente/MinhasReceitas";
 import BuscarReceita from "./pages/farmacia/BuscarReceita";
+import Cadastro from "./pages/Cadastro";
+import Home from "./pages/Home";
 
 const menuMedico: NavbarProps = {
   links: [
@@ -38,9 +40,10 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         {}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-
+        <Route path="/cadastro" element={<Cadastro />} />
+        
         <Route element={<RotaProtegida perfil="medico" />}>
           <Route path="/medico" element={<Layout {...menuMedico} />}>
             <Route index element={<Inicio />} />

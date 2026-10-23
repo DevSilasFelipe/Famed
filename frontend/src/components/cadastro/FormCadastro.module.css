@@ -1,0 +1,46 @@
+.linha {
+    display: flex;
+    gap: 15px;
+}
+
+.expande {
+    flex: 1;
+}
+
+.pequeno {
+    width: 120px;
+}
+
+.medio {
+    width: 170px;
+}
+
+.botao {
+    width: 240px;
+    height: 50px;
+    display: block;
+    margin: 35px auto 10px auto;
+    border: none;
+    border-radius: 8px;
+    background-color: #000547;
+    color: #ffffff;
+    font-size: 32px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.botao:hover {
+    opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+    .linha {
+    flex-direction: column;
+    gap: 0;
+    }
+
+    .pequeno,
+    .medio {
+    width: 100%;
+    }
+}

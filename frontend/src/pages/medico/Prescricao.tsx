@@ -1,45 +1,112 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import type { TipoReceita } from "../../components/CardReceita";
+import BlocoMedicamento, { condicaoParaEnvio, duracaoDefinidaPeloSistema, itemVazio } from "../../components/BlocoMedicamento";
+import type { CampoItem, ItemPrescricao } from "../../components/BlocoMedicamento";
+import { buscarMedicamento } from "../../data/medicamentos";
+import type { Medicamento } from "../../data/medicamentos";
+import { decimalParaNumero, somenteNumeros } from "../../utils/formatadores";
 import formulario from "../../styles/Formulario.module.css";
 import styles from "./Prescricao.module.css";
-import { somenteNumeros } from "../../utils/formatadores";
-
-interface FormPrescricao {
-    paciente: string;
-    cpf: string;
-    tipoReceita: TipoReceita | "";
-    medicamento: string;
-    quantidade: string;
-    posologia: string;
-}
-
-const formInicial: FormPrescricao = {
-    paciente: "",
-    cpf: "",
-    tipoReceita: "",
-    medicamento: "",
-    quantidade: "",
-    posologia: "",
-};
 
 export default function Prescricao() {
-    const [form, setForm] = useState<FormPrescricao>(formInicial);
+    const [paciente, setPaciente] = useState("");
+    const [cpf, setCpf] = useState("");
+    const [usoContinuo, setUsoContinuo] = useState(false);
+    const [itens, setItens] = useState<ItemPrescricao[]>([itemVazio(1)]);
+    const [arquivo, setArquivo] = useState<File | null>(null);
+    const [erro, setErro] = useState("");
 
-    function atualizarCampo(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
-        const { name, value } = e.target;
-        setForm((anterior) => ({ ...anterior, [name]: value }));
+    const proximoId = useRef(1);
+    const inputArquivoRef = useRef<HTMLInputElement>(null);
+
+    function atualizarItem(idLocal: number, campo: CampoItem, valor: string) {
+    setItens((anterior) =>
+        anterior.map((item) =>
+        item.idLocal === idLocal ? { ...item, [campo]: valor } : item,
+        ),
+    );
     }
 
-function atualizarCpf(e: ChangeEvent<HTMLInputElement>) {
-    setForm((anterior) => ({ ...anterior, cpf: somenteNumeros(e.target.value) }));
-}
+    function adicionarItem() {
+    proximoId.current += 1;
+    setItens((anterior) => [...anterior, itemVazio(proximoId.current)]);
+    }
+
+    function removerItem(idLocal: number) {
+    setItens((anterior) => anterior.filter((item) => item.idLocal !== idLocal));
+    }
+
+    function escolherArquivo(e: ChangeEvent<HTMLInputElement>) {
+    const escolhido = e.target.files?.[0] ?? null;
+
+    if (escolhido && !escolhido.name.toLowerCase().endsWith(".pem")) {
+        setErro("Selecione um arquivo com a extensão .pem.");
+        e.target.value = "";
+        setArquivo(null);
+        return;
+    }
+
+    setErro("");
+    setArquivo(escolhido);
+    }
 
     function enviar(e: FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        console.log("Prescrição:", form);
-        alert("Prescrição gerada! (ainda sem back-end)");
-        setForm(formInicial);
+    e.preventDefault();
+    setErro("");
+
+    const escolhidos: Medicamento[] = [];
+
+    for (let i = 0; i < itens.length; i++) {
+        const item = itens[i];
+        const med = buscarMedicamento(item.tipo, item.medicamento);
+
+        if (!med) {
+        setErro(`Medicamento ${i + 1}: escolha um item da lista de sugestões.`);
+        return;
+        }
+        if (escolhidos.some((outro) => outro.id === med.id)) {
+        setErro("O mesmo medicamento não pode aparecer duas vezes na mesma receita.");
+        return;
+        }
+        if (decimalParaNumero(item.dose) <= 0) {
+        setErro(`Medicamento ${i + 1}: a dose precisa ser maior que zero.`);
+        return;
+        }
+
+        escolhidos.push(med);
+    }
+
+    if (!arquivo) {
+        setErro("Selecione o arquivo de assinatura (.pem).");
+        return;
+    }
+
+    const dados = {
+        cpfPaciente: cpf,
+        usoContinuo,
+        itens: itens.map((item, i) => ({
+        medicamentoId: escolhidos[i].id,
+        dose: decimalParaNumero(item.dose),
+        intervaloValor: Number(item.intervaloValor),
+        intervaloUnidade: item.intervaloUnidade,
+        duracaoDias: duracaoDefinidaPeloSistema(usoContinuo, item.tipo)
+            ? null
+            : Number(item.duracao),
+        condicaoUso: condicaoParaEnvio(item),
+        quantidade: item.quantidade === "" ? null : Number(item.quantidade),
+        })),
+    };
+
+    console.log("Prescrição:", dados);
+    alert("Prescrição pronta para envio! (ainda sem back-end)");
+
+    setPaciente("");
+    setCpf("");
+    setUsoContinuo(false);
+    setItens([itemVazio(proximoId.current + 1)]);
+    proximoId.current += 1;
+    setArquivo(null);
+    if (inputArquivoRef.current) inputArquivoRef.current.value = "";
     }
 
     return (
@@ -51,11 +118,10 @@ function atualizarCpf(e: ChangeEvent<HTMLInputElement>) {
             <label htmlFor="paciente">Paciente</label>
             <input
             id="paciente"
-            name="paciente"
             type="text"
             placeholder="Nome Completo"
-            value={form.paciente}
-            onChange={atualizarCampo}
+            value={paciente}
+            onChange={(e) => setPaciente(e.target.value)}
             required
             />
         </div>
@@ -64,72 +130,75 @@ function atualizarCpf(e: ChangeEvent<HTMLInputElement>) {
             <label htmlFor="cpf">CPF</label>
             <input
             id="cpf"
-            name="cpf"
             type="text"
             inputMode="numeric"
             placeholder="Somente números"
+            minLength={11}
             maxLength={11}
-            value={form.cpf}
-            onChange={atualizarCpf}
+            value={cpf}
+            onChange={(e) => setCpf(somenteNumeros(e.target.value))}
             required
             />
         </div>
 
-        <div className={formulario.linha}>
-            <div className={`${formulario.grupo} ${styles.tipoReceita}`}>
-            <label htmlFor="tipoReceita">Tipo da Receita</label>
-            <select
-                id="tipoReceita"
-                name="tipoReceita"
-                value={form.tipoReceita}
-                onChange={atualizarCampo}
-                required
-            >
-                <option value="" disabled>Selecionar</option>
-                <option value="comum">Comum</option>
-                <option value="antibiotico">Antimicrobianos</option>
-                <option value="controlado">Controle Especial (C1)</option>
-            </select>
-            </div>
-
-            <div className={`${formulario.grupo} ${styles.medicamento}`}>
-            <label htmlFor="medicamento">Medicamento</label>
+        <label className={styles.usoContinuo}>
             <input
-                id="medicamento"
-                name="medicamento"
-                type="search"
-                placeholder="Buscar"
-                value={form.medicamento}
-                onChange={atualizarCampo}
-                required
+            type="checkbox"
+            checked={usoContinuo}
+            onChange={(e) => setUsoContinuo(e.target.checked)}
             />
-            </div>
+            <span>
+            Uso contínuo
+            <small>Tratamento contínuo: o médico define quando termina.</small>
+            </span>
+        </label>
 
-            <div className={`${formulario.grupo} ${styles.quantidade}`}>
-            <label htmlFor="quantidade">Quantidade</label>
-            <input
-                id="quantidade"
-                name="quantidade"
-                type="number"
-                min={1}
-                value={form.quantidade}
-                onChange={atualizarCampo}
-                required
+        {itens.map((item, indice) => (
+            <BlocoMedicamento
+            key={item.idLocal}
+            item={item}
+            numero={indice + 1}
+            usoContinuo={usoContinuo}
+            quantidadeCalculada={null}
+            podeRemover={itens.length > 1}
+            aoMudar={(campo, valor) => atualizarItem(item.idLocal, campo, valor)}
+            aoRemover={() => removerItem(item.idLocal)}
             />
-            </div>
-        </div>
+        ))}
+
+        <button type="button" className={styles.adicionar} onClick={adicionarItem}>
+            + Adicionar outro medicamento
+        </button>
 
         <div className={formulario.campo}>
-            <label htmlFor="posologia">Posologia</label>
+            <label htmlFor="assinatura">Assinatura digital</label>
+            <div className={styles.assinatura}>
+            <button
+                id="assinatura"
+                type="button"
+                className={styles.escolher}
+                onClick={() => inputArquivoRef.current?.click()}
+            >
+                Escolher arquivo (.pem)
+            </button>
+            <span className={styles.nomeArquivo}>
+                {arquivo ? arquivo.name : "Nenhum arquivo selecionado"}
+            </span>
+            </div>
             <input
-            id="posologia"
-            name="posologia"
-            type="text"
-            value={form.posologia}
-            onChange={atualizarCampo}
-            required
+            ref={inputArquivoRef}
+            type="file"
+            accept=".pem"
+            hidden
+            onChange={escolherArquivo}
             />
         </div>
+
+        {erro && (
+            <p className={styles.erro} role="alert">
+            {erro}
+            </p>
+        )}
 
         <button type="submit" className={formulario.botao}>
             Gerar prescrição

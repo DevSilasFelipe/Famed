@@ -1,17 +1,73 @@
-.tipoReceita {
-    flex: 1;
+.usoContinuo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 25px;
+    cursor: pointer;
 }
 
-.medicamento {
-    flex: 1;
+.usoContinuo input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border-radius: 6px;
+    accent-color: #000547;
+    cursor: pointer;
+    flex-shrink: 0;
 }
 
-.quantidade {
-    width: 220px;
+.usoContinuo small {
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+    color: #4a4a4a;
+    margin-top: 2px;
 }
 
-@media (max-width: 950px) {
-    .quantidade {
-        width: 100%;
-    }
+.adicionar {
+    width: 100%;
+    border: 2px dashed #000547;
+    background: transparent;
+    color: #000547;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 14px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-bottom: 30px;
+    transition: 0.2s;
+}
+
+.adicionar:hover {
+    background-color: #dcdaf4;
+}
+
+.assinatura {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.escolher {
+    border: 2px solid #000547;
+    background-color: #ffffff;
+    color: #000547;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.nomeArquivo {
+    font-size: 16px;
+    color: #1d1d1d;
+}
+
+.erro {
+    color: #bf1736;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 16px;
 }
