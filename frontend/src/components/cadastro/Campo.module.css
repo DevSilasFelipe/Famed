@@ -1,0 +1,22 @@
+.campo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 22px;
+}
+
+.campo label {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #1d1d1d;
+}
+
+.campo input,
+.campo select {
+    height: 42px;
+    border: none;
+    border-radius: 5px;
+    padding: 0 10px;
+    outline: none;
+    background-color: #ffffff;
+    font-size: 16px;
+}

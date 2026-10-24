@@ -1,0 +1,98 @@
+.bloco {
+    background-color: #f4f3fd;
+    border: 2px solid #cfcdee;
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 25px;
+}
+
+.cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.cabecalho h2 {
+    font-size: 22px;
+    color: #1d1d1d;
+}
+
+.remover {
+    border: none;
+    background: none;
+    color: #bf1736;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.expande {
+    flex: 1;
+}
+
+.doseLinha {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.doseCampo {
+    width: 160px;
+}
+
+.saida {
+    display: flex;
+    align-items: center;
+    min-height: 60px;
+    padding: 0 18px;
+    border-radius: 20px;
+    background-color: #e3e2f4;
+    font-size: 20px;
+    color: #1d1d1d;
+}
+
+.secao {
+    border: none;
+    padding: 0;
+    margin: 0 0 25px 0;
+}
+
+.secao legend {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    padding: 0;
+}
+
+.intervalo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.intervalo span {
+    font-size: 20px;
+}
+
+.intervaloNumero {
+    width: 140px;
+}
+
+.intervaloUnidade {
+    width: 200px;
+}
+
+@media (max-width: 950px) {
+    .doseLinha {
+    flex-direction: column;
+    align-items: stretch;
+    }
+
+    .doseCampo,
+    .intervaloNumero,
+    .intervaloUnidade {
+    width: 100%;
+    }
+}

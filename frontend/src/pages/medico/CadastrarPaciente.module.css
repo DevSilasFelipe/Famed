@@ -1,0 +1,35 @@
+.genero {
+    width: 280px;
+}
+
+.nascimento {
+    width: 240px;
+}
+
+.endereco {
+    flex: 1;
+}
+
+.numero {
+    width: 180px;
+}
+
+.complemento {
+    flex: 1;
+}
+
+.uf {
+    width: 140px;
+}
+
+@media (max-width: 950px) {
+    .genero,
+    .nascimento,
+    .endereco,
+    .numero,
+    .complemento,
+    .uf {
+    width: 100%;
+    flex: none;
+    }
+}
