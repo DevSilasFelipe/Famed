@@ -34,7 +34,7 @@ export default function FormPaciente({ aoConcluir }: FormProps) {
     setErro("");
 
     if (valores.senha !== valores.confirmarSenha) {
-        alert("As senhas não conferem.");
+        setErro("As senhas não conferem.");
         return;
     }
 
