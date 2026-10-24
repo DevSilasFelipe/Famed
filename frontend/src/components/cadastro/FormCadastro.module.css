@@ -33,6 +33,13 @@
     opacity: 0.9;
 }
 
+.erro {
+    color: #c0392b;
+    font-size: 0.9rem;
+    white-space: pre-line;
+    margin: 0 0 12px;
+}
+
 @media (max-width: 600px) {
     .linha {
     flex-direction: column;
