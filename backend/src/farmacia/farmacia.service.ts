@@ -37,6 +37,7 @@ export class FarmaciaService {
                     senhaHash,
                     perfil: 'FARMACIA',
                     situacao: 'ATIVO',
+                    endereco: dto.endereco
                 }),
             );
 

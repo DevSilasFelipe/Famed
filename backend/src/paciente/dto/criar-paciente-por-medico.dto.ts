@@ -18,4 +18,10 @@ export class CriarPacientePorMedicoDto {
     @IsOptional()
     @IsIn(['M', 'F'])
     sexo?: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @MaxLength(255)
+    @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+    endereco: string;
 }

@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsString, Matches, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, Matches, MinLength, MaxLength } from 'class-validator';
 import { SomenteDigitos } from '../../common/transforms/somente-digitos';
 
 export class CriarMedicoDto {
@@ -29,4 +29,10 @@ export class CriarMedicoDto {
     @IsString()
     @IsNotEmpty()
     chavePublica: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @MaxLength(255)
+    @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+    endereco: string;
 }
