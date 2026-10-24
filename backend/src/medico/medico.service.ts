@@ -40,6 +40,7 @@ export class MedicoService {
                     senhaHash,
                     perfil: 'MEDICO',
                     situacao: 'ATIVO',
+                    endereco: dto.endereco
                 }),
             );
 

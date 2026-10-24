@@ -1,5 +1,6 @@
-import { IsIn, IsNotEmpty, IsOptional, isString, IsString, Matches } from 'class-validator';
+import { IsIn, IsISO8601, IsNotEmpty, IsOptional, IsString, Matches, MaxLength } from 'class-validator';
 import { SomenteDigitos } from '../../common/transforms/somente-digitos';
+import { Transform } from 'class-transformer';
 
 export class CriarPacientePorMedicoDto {
     @IsString()
@@ -11,9 +12,16 @@ export class CriarPacientePorMedicoDto {
     cpf: string;
 
     @Matches(/^\d{4}-\d{2}-\d{2}$/, { message: 'dataNascimento deve estar no formato AAAA-MM-DD' })
+    @IsISO8601({ strict: true, strictSeparator: true }, { message: 'dataNascimento não é uma data válida' })
     dataNascimento: string;
 
     @IsOptional()
     @IsIn(['M', 'F'])
     sexo?: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @MaxLength(255)
+    @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+    endereco: string;
 }

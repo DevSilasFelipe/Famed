@@ -26,7 +26,7 @@ export class PacienteService {
                 const resultado = await manager.update(
                     Usuario,
                     { id: existente.usuarioId, situacao: 'PENDENTE' },
-                    { email: dto.email, senhaHash, situacao: 'ATIVO' }
+                    { email: dto.email, senhaHash, situacao: 'ATIVO', endereco : dto.endereco },
                 );
                 if (resultado.affected !== 1) {
                     throw this.conflito();
@@ -44,7 +44,8 @@ export class PacienteService {
                     email: dto.email,
                     senhaHash,
                     perfil: 'PACIENTE',
-                    situacao: 'ATIVO'
+                    situacao: 'ATIVO',
+                    endereco: dto.endereco
                 }),
         );
         
@@ -80,6 +81,7 @@ export class PacienteService {
                     senhaHash: null,
                     perfil: 'PACIENTE',
                     situacao: 'PENDENTE',
+                    endereco: dto.endereco
                 }),
             );
             await manager.insert(Paciente, {
