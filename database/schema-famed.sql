@@ -265,6 +265,7 @@ CREATE TABLE receita(
     assinatura_digital	TEXT NOT NULL,
     medico_nome			VARCHAR(150) NOT NULL,
     paciente_nome		VARCHAR(150) NOT NULL,
+	paciente_endereco 	VARCHAR(255) NOT NULL,
     
     CONSTRAINT fk_receita_medico FOREIGN KEY (medico_id)
 		REFERENCES medico (usuario_id) ON DELETE RESTRICT,

@@ -1,5 +1,6 @@
-import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
+import { IsEmail, IsString, Matches, MinLength, IsNotEmpty, MaxLength } from 'class-validator';
 import { SomenteDigitos  } from '../../common/transforms/somente-digitos';
+import { Transform } from 'class-transformer';
 
 export class CriarFarmaciaDto {
     @IsEmail()
@@ -12,4 +13,10 @@ export class CriarFarmaciaDto {
     @SomenteDigitos()
     @Matches(/^\d{14}$/, { message: 'CNPJ deve ter 14 digitos!' })
     cnpj: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @MaxLength(255)
+    @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+    endereco: string;
 }
