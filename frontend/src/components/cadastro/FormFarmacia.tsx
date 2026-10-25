@@ -4,6 +4,8 @@ import { somenteNumeros } from "../../utils/formatadores";
 import Campo from "./Campo";
 import CamposSenha from "./CamposSenha";
 import estilos from "./FormCadastro.module.css";
+import { useState } from "react";
+import { post, ErroApi } from "../../api/api";
 
 interface FormProps {
     aoConcluir: () => void;
@@ -20,22 +22,34 @@ const inicial = {
 
 export default function FormFarmacia({ aoConcluir }: FormProps) {
     const { valores, atualizar, definir } = useFormulario(inicial);
+    const [erro, setErro] = useState("");
+    const [enviando, setEnviando] = useState(false);
 
-    function enviar(e: FormEvent<HTMLFormElement>) {
+    async function enviar(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setErro("");
 
     if (valores.senha !== valores.confirmarSenha) {
-        alert("As senhas não conferem.");
+        setErro("As senhas não conferem.");
         return;
     }
 
-    console.log("Cadastro de farmácia:", {
-        ...valores,
-        senha: "***",
-        confirmarSenha: "***",
-    });
-    alert("Cadastro enviado! Sua conta ficará pendente até a aprovação de um administrador.");
-    aoConcluir();
+    setEnviando(true);
+    try {
+        await post("/farmacias", {
+            nome    : valores.nome,
+            email   : valores.email,
+            senha   : valores.senha,
+            cnpj    : valores.cnpj,
+            endereco: valores.endereco,
+        });
+        alert("Cadastro realizado!");
+        aoConcluir();
+    } catch (err) {
+        setErro(err instanceof ErroApi ? err.message : "Erro inesperado.");
+    } finally {
+        setEnviando(false);
+    }
     }
 
     return (
@@ -72,8 +86,9 @@ export default function FormFarmacia({ aoConcluir }: FormProps) {
         aoMudar={atualizar}
         />
 
-        <button type="submit" className={estilos.botao}>
-        Continuar
+        {erro && <p role="alert" className={estilos.erro}>{erro}</p>}
+        <button type="submit" className={estilos.botao} disabled={enviando}>
+            {enviando ? "Enviando..." : "Continuar"}
         </button>
     </form>
     );
