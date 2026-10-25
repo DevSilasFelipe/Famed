@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Medicamento } from "./medicamento.entity";
+import { formaExigeQuantidadeManual } from "./forma-farmaceutica";
 
 export interface MedicamentoResposta {
     id               : number;
@@ -10,6 +11,7 @@ export interface MedicamentoResposta {
     formaFarmaceutica: string;
     unidadeDose      : string;
     listaControle    : string; // C1 | ANTIMICROBIANO | COMUM 
+    quantidadeManual : boolean; // true: o médico digita a quantidade de frascos
 }
 
 @Injectable()
@@ -33,6 +35,7 @@ export class MedicamentoService {
             formaFarmaceutica: m.formaFarmaceutica,
             unidadeDose      : m.unidadeDose,
             listaControle    : m.listaControle.codigo,
+            quantidadeManual : formaExigeQuantidadeManual(m.formaFarmaceutica),
         }));
     }
 }
