@@ -1,21 +1,27 @@
 export type Perfil = "medico" | "paciente" | "farmacia";
 
-const CHAVE = "tipoUsuario";
+const CHAVE_PERFIL = "tipoUsuario";
+const CHAVE_TOKEN  = "accessToken";
 
-export function iniciarSessao(perfil: Perfil) {
-    sessionStorage.setItem(CHAVE, perfil);
+export function paraPerfil(valor: string): Perfil | null {
+    const perfil = valor.toLowerCase()
+    return perfil === "medico" || perfil === "paciente" || perfil === "farmacia" ? perfil : null;
+}
+
+export function iniciarSessao(perfil: Perfil, token: string) {
+    sessionStorage.setItem(CHAVE_PERFIL, perfil);
+    sessionStorage.setItem(CHAVE_TOKEN, token);
 }
 
 export function encerrarSessao() {
-    sessionStorage.removeItem(CHAVE);
+    sessionStorage.removeItem(CHAVE_PERFIL);
+    sessionStorage.removeItem(CHAVE_TOKEN);
 }
 
 export function perfilLogado(): Perfil | null {
-    const valor = sessionStorage.getItem(CHAVE);
-    if (valor === "medico" || valor === "paciente" || valor === "farmacia") {
-    return valor;
-    }
-    return null;
+    const valor = sessionStorage.getItem(CHAVE_PERFIL);
+    return valor ? paraPerfil(valor) : null;
+    
 }
 
 export const rotaInicial: Record<Perfil, string> = {

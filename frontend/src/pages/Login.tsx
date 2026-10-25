@@ -1,15 +1,10 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { iniciarSessao, perfilLogado, rotaInicial } from "../auth/sessao";
-import type { Perfil } from "../auth/sessao";
+import { iniciarSessao, paraPerfil, perfilLogado, rotaInicial } from "../auth/sessao";
 import styles from "./Login.module.css";
+import { post, ErroApi } from "../api/api";
 
-const contasDeTeste: Record<string, { senha: string; perfil: Perfil }> = {
-    "teste@medico.com": { senha: "123", perfil: "medico" },
-    "teste@farmacia.com": { senha: "123", perfil: "farmacia" },
-    "teste@paciente.com": { senha: "123", perfil: "paciente" },
-};
 
 export default function Login() {
     const [usuario, setUsuario] = useState("");
@@ -18,21 +13,37 @@ export default function Login() {
     const navigate = useNavigate();
 
     const perfilAtual = perfilLogado();
+    const [enviando, setEnviando] = useState(false);
+
     if (perfilAtual) {
     return <Navigate to={rotaInicial[perfilAtual]} replace />;
     }
 
-    function entrar(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+    async function entrar(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setErro("")
+        setEnviando(true);
 
-    const conta = contasDeTeste[usuario.trim().toLowerCase()];
-    if (!conta || conta.senha !== senha) {
-        setErro("Usuário ou senha inválidos.");
-        return;
-    }
+        try {
+            const resposta = await post<{ accessToken: string; perfil: string }>("/auth/login", {
+                email: usuario.trim(),
+                senha,
+            });
 
-    iniciarSessao(conta.perfil);
-    navigate(rotaInicial[conta.perfil], { replace: true });
+            const perfil = paraPerfil(resposta.perfil);
+            if (!perfil) {
+                setErro("Esse perfil ainda não tem acesso pelo site.");
+                return;
+            }
+    
+            iniciarSessao(perfil, resposta.accessToken);
+            navigate(rotaInicial[perfil], { replace: true });
+        } catch (err) {
+            setErro(err instanceof ErroApi ? err.message : "Erro inesperado.");
+        } finally {
+            setEnviando(false);
+        }
+
     }
 
     return (
@@ -46,10 +57,10 @@ export default function Login() {
 
         <form className={styles.form} onSubmit={entrar}>
             <div className={styles.campo}>
-            <label htmlFor="usuario">E-mail ou CNPJ</label>
+            <label htmlFor="usuario">E-mail</label>
             <input
                 id="usuario"
-                type="text"
+                type="email"
                 autoComplete="username"
                 value={usuario}
                 onChange={(e) => setUsuario(e.target.value)}
@@ -79,8 +90,8 @@ export default function Login() {
             </p>
             )}
 
-            <button type="submit" className={styles.botao}>
-            Entrar
+            <button type="submit" className={styles.botao} disabled={enviando}>
+                {enviando ? "Entrando..." : "Entrar"}
             </button>
         </form>
 
