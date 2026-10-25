@@ -32,7 +32,7 @@ export class FarmaciaService {
         return this.dataSource.transaction(async (manager) => {
             const usuario = await manager.save(
                 manager.create(Usuario, {
-                    nome: info.nome_fantasia || info.razao_social,
+                    nome: dto.nome,
                     email: dto.email,
                     senhaHash,
                     perfil: 'FARMACIA',
