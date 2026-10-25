@@ -17,7 +17,7 @@ export class AuthService {
         private readonly auditoria: AuditoriaService,
     ) {}
 
-    async login(dto: LoginDto, ip?: string): Promise<{ accessToken: string }> {
+    async login(dto: LoginDto, ip?: string): Promise<{ accessToken: string; perfil: string }> {
         const invalido = () => new UnauthorizedException('Credenciais inválidas.');
 
         // addSelect porque senhaHash tem select: false
@@ -50,6 +50,9 @@ export class AuthService {
             });
         }
 
-        return { accessToken: await this.jwt.signAsync(payload) };
+        return { 
+            accessToken: await this.jwt.signAsync(payload),
+            perfil: usuario.perfil, 
+        };
     }
 }

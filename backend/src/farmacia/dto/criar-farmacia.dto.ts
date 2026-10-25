@@ -19,4 +19,10 @@ export class CriarFarmaciaDto {
     @MaxLength(255)
     @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
     endereco: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @MaxLength(150)
+    @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+    nome: string;
 }

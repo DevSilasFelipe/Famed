@@ -4,6 +4,8 @@ import Campo from "./Campo";
 import CamposSenha from "./CamposSenha";
 import estilos from "./FormCadastro.module.css";
 import { somenteNumeros } from "../../utils/formatadores";
+import { useState } from "react";
+import { post, ErroApi } from "../../api/api";
 
 interface FormProps {
     aoConcluir: () => void;
@@ -13,7 +15,7 @@ const inicial = {
     nome: "",
     cpf: "",
     dataNascimento: "",
-    genero: "",
+    sexo: "",
     email: "",
     endereco: "",
     senha: "",
@@ -24,22 +26,37 @@ const hoje = new Date().toLocaleDateString("sv-SE");
 
 export default function FormPaciente({ aoConcluir }: FormProps) {
     const { valores, atualizar, definir } = useFormulario(inicial);
+    const [erro, setErro] = useState("");
+    const [enviando, setEnviando] = useState(false);
 
-    function enviar(e: FormEvent<HTMLFormElement>) {
+    async function enviar(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setErro("");
 
     if (valores.senha !== valores.confirmarSenha) {
-        alert("As senhas não conferem.");
+        setErro("As senhas não conferem.");
         return;
     }
 
-    console.log("Cadastro de paciente:", {
-        ...valores,
-        senha: "***",
-        confirmarSenha: "***",
-    });
-    alert("Cadastro realizado!");
-    aoConcluir();
+    setEnviando(true);
+    try {
+        await post("/pacientes", {
+            nome          : valores.nome,
+            email         : valores.email,
+            senha         : valores.senha,
+            cpf           : valores.cpf,
+            dataNascimento: valores.dataNascimento,
+            sexo          : valores.sexo,
+            endereco      : valores.endereco,
+        });
+        alert("Cadastro realizado!");
+        aoConcluir();
+    } catch (err) {
+        setErro(err instanceof ErroApi ? err.message : "Erro inesperado.");
+    } finally {
+        setEnviando(false);
+    }
+
     }
 
     return (
@@ -76,8 +93,8 @@ export default function FormPaciente({ aoConcluir }: FormProps) {
             />
         </Campo>
 
-        <Campo id="genero" rotulo="Gênero" className={estilos.medio}>
-            <select id="genero" name="genero" value={valores.genero} onChange={atualizar} required>
+        <Campo id="sexo" rotulo="Sexo" className={estilos.medio}>
+            <select id="sexo" name="sexo" value={valores.sexo} onChange={atualizar} required>
             <option value="" disabled>Selecionar</option>
             <option value="M">Masculino</option>
             <option value="F">Feminino</option>
@@ -99,8 +116,9 @@ export default function FormPaciente({ aoConcluir }: FormProps) {
         aoMudar={atualizar}
         />
 
-        <button type="submit" className={estilos.botao}>
-        Continuar
+        {erro && <p role="alert" className={estilos.erro}>{erro}</p>}
+        <button type="submit" className={estilos.botao} disabled={enviando}>
+            {enviando ? "Enviando..." : "Continuar"}
         </button>
     </form>
     );
