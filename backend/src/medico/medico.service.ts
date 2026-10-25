@@ -1,5 +1,5 @@
-import { BadRequestException, Injectable, UnprocessableEntityException } from '@nestjs/common';
-import { createPublicKey } from 'crypto';
+import { BadRequestException, ConflictException, Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { createPublicKey, KeyObject } from 'crypto';
 import { DataSource } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { Usuario } from '../usuario/usuario.entity';
@@ -14,21 +14,7 @@ export class MedicoService {
 
     async criar(dto: CriarMedicoDto): Promise<UsuarioResposta> {
 
-        this.validarChavePublica(dto.chavePublica);
-
-        const registro = await this.dataSource.getRepository(CfmRegistro).findOneBy({
-            cpf: dto.cpf,
-            crm: dto.crm,
-            uf: dto.uf,
-        });
-        if (!registro) {
-            throw new UnprocessableEntityException(
-                'Medico não encontrado no registro do CFM: CPF, CRM e UF não conferem',
-            );
-        }
-        if (registro.situacao !== 'ATIVO') {
-            throw new UnprocessableEntityException('Registro não ativo no CFM')
-        }
+        await this.validar(dto);
 
         const senhaHash = await bcrypt.hash(dto.senha, 10);
 
@@ -56,22 +42,53 @@ export class MedicoService {
         });
     }
 
-    private validarChavePublica(pem: string): void {
+    async validar(dto:CriarMedicoDto): Promise<void> {
+        this.validarChavePublica(dto.chavePublica);
 
+        const registro = await this.dataSource.getRepository(CfmRegistro).findOneBy({
+            cpf: dto.cpf,
+            crm: dto.crm,
+            uf:  dto.uf,
+        });
+        if (!registro) {
+            throw new UnprocessableEntityException(
+                'Medico não encontrado no registro do CFM: CPF, CRM e UF não conferem',
+            );
+        }
+        if (registro.situacao !== 'ATIVO') {
+            throw new UnprocessableEntityException('Registro não ativo no CFM');
+        }
+
+        const emailEmUso   = await this.dataSource.getRepository(Usuario).existsBy({ email: dto.email });
+        const medicoExiste = await this.dataSource
+            .getRepository(Medico)
+            .existsBy([{ cpf: dto.cpf}, { crm: dto.crm, uf: dto.uf}]);
+        
+        if (emailEmUso || medicoExiste) {
+            throw new ConflictException('Já existe um registro com esse valor');
+        }
+    }
+
+    private validarChavePublica(pem: string): void {
         if (/PRIVATE KEY/i.test(pem)) {
             throw new BadRequestException(
                 'Envie apenas a chave pública. A chave privada nunca deve ser enviada',
             );
         }
 
+        let chave: KeyObject;
         try {
             if (!/-----BEGIN (RSA )?PUBLIC KEY-----/.test(pem)) throw new Error();
-            const chave = createPublicKey(pem);
+            chave = createPublicKey(pem);
             if (chave.asymmetricKeyType !== 'rsa') throw new Error();
         } catch {
             throw new BadRequestException(
                 'Chave pública inválida: envie uma chave RSA pública em formato PEM'
             );
+        }
+
+        if ((chave.asymmetricKeyDetails?.modulusLength ?? 0) < 2048) {
+            throw new BadRequestException('Chave RSA muito curta: use no mínimo 2048 bits');
         }
     }
 }
