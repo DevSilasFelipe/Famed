@@ -4,11 +4,14 @@ import { ufs } from "../../data/ufs";
 import { somenteNumeros } from "../../utils/formatadores";
 import formulario from "../../styles/Formulario.module.css";
 import styles from "./CadastrarPaciente.module.css";
+import { useNavigate } from "react-router-dom";
+import { post, ErroApi } from "../../api/api";
+import { encerrarSessao, tokenLogado } from "../../auth/sessao";
 
 interface FormPaciente {
     nome: string;
     cpf: string;
-    genero: "M" | "F" | "";
+    sexo: "M" | "F" | "";
     dataNascimento: string;
     endereco: string;
     numero: string;
@@ -19,7 +22,7 @@ interface FormPaciente {
 const formInicial: FormPaciente = {
     nome: "",
     cpf: "",
-    genero: "",
+    sexo: "",
     dataNascimento: "",
     endereco: "",
     numero: "",
@@ -29,8 +32,16 @@ const formInicial: FormPaciente = {
 
 const hoje = new Date().toLocaleDateString("sv-SE");
 
+function montarEndereco(f: FormPaciente): string {
+    const complemento = f.complemento.trim() ? `, ${f.complemento.trim()}` : "";
+    return `${f.endereco.trim()}, ${f.numero.trim()}${complemento} - ${f.uf}`;
+}
+
 export default function CadastrarPaciente() {
     const [form, setForm] = useState<FormPaciente>(formInicial);
+    const navigate = useNavigate();
+    const [erro, setErro] = useState("");
+    const [enviando, setEnviando] = useState(false);
 
     function atualizarCampo(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { name, value } = e.target;
@@ -41,11 +52,50 @@ export default function CadastrarPaciente() {
     setForm((anterior) => ({ ...anterior, cpf: somenteNumeros(e.target.value) }));
     }
 
-    function enviar(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    console.log("Paciente:", form);
-    alert("Paciente cadastrado! (ainda sem back-end)");
-    setForm(formInicial);
+    function expirarSessao() {
+        encerrarSessao();
+        alert("Sua sessão expirou. Entre novamente.");
+        navigate("/login", { replace: true});
+    }
+
+    async function enviar(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setErro("");
+
+        const token = tokenLogado();
+        if (!token) {
+            expirarSessao();
+            return;
+        }
+
+        setEnviando(true);
+        try {
+            await post(
+                "/pacientes/por-medico",
+                {
+                    nome          : form.nome,
+                    cpf           : form.cpf,
+                    dataNascimento: form.dataNascimento,
+                    sexo          : form.sexo,
+                    endereco      : montarEndereco(form),
+                },
+                token,
+            );
+            alert("Paciente cadastrado!");
+            setForm(formInicial);
+        } catch (err) {
+            if (err instanceof ErroApi && err.status === 401) {
+                expirarSessao();
+                return;
+            }
+            if (err instanceof ErroApi && err.status === 403) {
+                setErro("Você não tem permissão para cadastrar pacientes.");
+                return;
+            }
+            setErro(err instanceof ErroApi ? err.message : "Erro inesperado.");
+        } finally {
+            setEnviando(false);
+        }
     }
 
     return (
@@ -82,12 +132,12 @@ export default function CadastrarPaciente() {
         </div>
 
         <div className={formulario.linha}>
-            <div className={`${formulario.grupo} ${styles.genero}`}>
-            <label htmlFor="genero">Gênero</label>
+            <div className={`${formulario.grupo} ${styles.sexo}`}>
+            <label htmlFor="sexo">Sexo</label>
             <select
-                id="genero"
-                name="genero"
-                value={form.genero}
+                id="sexo"
+                name="sexo"
+                value={form.sexo}
                 onChange={atualizarCampo}
                 required
             >
@@ -170,8 +220,10 @@ export default function CadastrarPaciente() {
             </div>
         </div>
 
-        <button type="submit" className={formulario.botao}>
-            Cadastrar Paciente
+        {erro && <p role="alert" className={styles.erro}>{erro}</p>}
+
+        <button type="submit" className={formulario.botao} disabled={enviando}>
+            {enviando ? "Enviando..." : "Cadastrar Paciente"}
         </button>
         </form>
     </div>
