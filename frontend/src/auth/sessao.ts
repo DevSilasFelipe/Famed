@@ -18,6 +18,10 @@ export function encerrarSessao() {
     sessionStorage.removeItem(CHAVE_TOKEN);
 }
 
+export function tokenLogado(): string | null {
+    return sessionStorage.getItem(CHAVE_TOKEN);
+}
+
 export function perfilLogado(): Perfil | null {
     const valor = sessionStorage.getItem(CHAVE_PERFIL);
     return valor ? paraPerfil(valor) : null;
