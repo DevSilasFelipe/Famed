@@ -72,7 +72,8 @@ export class ReceitaService {
             resumo: {
                 lista: dados.lista,
                 dataValidade: dados.dataValidade,
-                paciente: dados.itens.map((i) => ({
+                paciente: dados.paciente.nome,
+                itens: dados.itens.map((i) => ({
                     medicamentoId: i.medicamentoId,
                     nome: i.nome,
                     dosagem: i.dosagem,
