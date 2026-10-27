@@ -1,0 +1,103 @@
+.titulo {
+    font-size: 30px;
+    color: #1d1d1d;
+    margin-bottom: 8px;
+}
+
+.aviso {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 24px;
+}
+
+.etiquetas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.etiqueta {
+    background-color: #dbae00;
+    color: #1d1d1d;
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.etiquetaSuave {
+    background-color: #f4f3fd;
+    border: 2px solid #cfcdee;
+    color: #1d1d1d;
+    border-radius: 999px;
+    padding: 4px 16px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.secao {
+    background-color: #f4f3fd;
+    border: 2px solid #cfcdee;
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 25px;
+}
+
+.secao h3 {
+    font-size: 22px;
+    color: #1d1d1d;
+    margin-bottom: 16px;
+}
+
+.dados {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 10px 24px;
+    margin: 0;
+}
+
+.dados dt {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.dados dd {
+    margin: 0;
+    font-size: 18px;
+}
+
+.nota {
+    margin: 14px 0 0;
+    font-size: 16px;
+    color: #555;
+}
+
+.item + .item {
+    border-top: 1px solid #cfcdee;
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+.nomeItem {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 12px;
+}
+
+.acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 10px;
+}
+
+.voltar {
+    border: 2px solid #1d1d1d;
+    background: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+}
