@@ -10,7 +10,8 @@ import styles from "./Prescricao.module.css";
 import { ErroApi } from "../../api/api";
 import { tokenLogado } from "../../auth/sessao";
 import { prepararReceita } from "../../api/receitas";
-import type { CorpoReceita } from "../../api/receitas";
+import type { CorpoReceita, RespostaPreparar } from "../../api/receitas";
+import ConferenciaReceita from "../../components/ConferenciaReceita";
 
 export default function Prescricao() {
     const [cpf, setCpf] = useState("");
@@ -19,6 +20,7 @@ export default function Prescricao() {
     const [arquivo, setArquivo] = useState<File | null>(null);
     const [erro, setErro] = useState("");
     const [carregando, setCarregando] = useState(false);
+    const [previa, setPrevia] = useState<RespostaPreparar | null>(null);
 
     const [medicamentos, setMedicamentos] = useState<Medicamento[]>([]);
 
@@ -109,12 +111,22 @@ export default function Prescricao() {
         setCarregando(true);
         try {
             const resposta = await prepararReceita(corpo, tokenLogado() ?? undefined);
-            console.log("Resposta do preparar:", resposta); // temporário: a conferência vem no próximo commit
+            setPrevia(resposta);
+            window.scrollTo({ top: 0 });
         } catch (falha) {
             setErro(falha instanceof ErroApi ? falha.message : "Não foi possível revisar a prescrição.");
         } finally {
             setCarregando(false);
         }
+    }
+
+    if (previa) {
+        return (
+            <div className={formulario.pagina}>
+                <h1 className={formulario.titulo}>Nova Prescrição</h1>
+                <ConferenciaReceita resumo={previa.resumo} aoVoltar={() => setPrevia(null)} />
+            </div>
+        )
     }
 
     return (
