@@ -71,14 +71,20 @@ export class ReceitaService {
             selo, 
             resumo: {
                 lista: dados.lista,
+                usoContinuo: dto.usoContinuo,
                 dataValidade: dados.dataValidade,
-                paciente: dados.paciente.nome,
+                paciente: {
+                    nome    : dados.paciente.nome,
+                    cpf     : dto.pacienteCpf,
+                    endereco: dados.paciente.endereco,
+                },
                 itens: dados.itens.map((i) => ({
                     medicamentoId: i.medicamentoId,
-                    nome: i.nome,
-                    dosagem: i.dosagem,
-                    quantidade: i.quantidade,
-                    posologia: i.posologia,
+                    nome         : i.nome,
+                    dosagem      : i.dosagem,
+                    quantidade   : i.quantidade,
+                    duracaoDias  : i.duracaoDias,
+                    posologia    : i.posologia,
                 })),
             },
         };
