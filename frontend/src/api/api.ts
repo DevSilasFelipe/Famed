@@ -15,22 +15,21 @@ export class ErroApi extends Error {
     }
 }
 
-/**
- * Envia um POST em JSON para o backend e devolve o corpo da resposta.
- * Se `token` for informado, envia o cabeçalho Authorization (Bearer).
- * Lança ErroApi quando o servidor recusa o pedido (status 4xx/5xx,
- * com a mensagem do backend) ou não responde (status 0).
- */
-export async function post<T>(rota: string, corpo: unknown, token?: string) : Promise<T> {
+async function requisitar<T>(
+    metodo: "GET" | "POST",
+    rota: string,
+    corpo?: unknown,
+    token?: string,
+): Promise<T> {
     let resposta: Response;
     try {
         resposta = await fetch(`${API_URL}${rota}`, {
-            method: "POST",
+            method: metodo,
             headers: {
-                "Content-Type": "application/json",
-                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                ...(corpo !== undefined ? { "Content-Type": "application/json" } : {}),
+                ...(token? { Authorization: `Bearer ${token}` } : {}),
             },
-            body: JSON.stringify(corpo),
+            body: corpo !== undefined ? JSON.stringify(corpo) : undefined,
         });
     } catch {
         throw new ErroApi("Não foi possível conectar ao servidor.", 0);
@@ -45,4 +44,19 @@ export async function post<T>(rota: string, corpo: unknown, token?: string) : Pr
     }
 
     return dados as T;
+}
+
+/**
+ * Envia um POST em JSON para o backend e devolve o corpo da resposta.
+ * Se `token` for informado, envia o cabeçalho Authorization (Bearer).
+ * Lança ErroApi quando o servidor recusa o pedido (status 4xx/5xx,
+ * com a mensagem do backend) ou não responde (status 0).
+ */
+export function post<T>(rota: string, corpo: unknown, token?: string) : Promise<T> {
+    return requisitar<T>("POST", rota, corpo, token);
+}
+
+/** Envia um GET ao backend (com Bearer, se houver `token`) e devolve o corpo da resposta. */
+export function get<T>(rota: string, token?: string): Promise<T> {
+    return requisitar<T>("GET", rota, undefined, token);
 }
