@@ -73,6 +73,7 @@ export class ReceitaService {
                 lista: dados.lista,
                 usoContinuo: dto.usoContinuo,
                 dataValidade: dados.dataValidade,
+                validadePrimeiraCompra: dados.validadePrimeiraCompra,
                 paciente: {
                     nome    : dados.paciente.nome,
                     cpf     : dto.pacienteCpf,
@@ -234,6 +235,10 @@ export class ReceitaService {
             dto.usoContinuo,
         );
 
+        // Prazo da 1ª compra: só a validade da lista, sem a janela do uso contínuo.
+        // É derivado de dados que já existem: não entra no texto assinado nem em coluna alguma.
+        const validadePrimeiraCompra = calcularDataValidade(emitidaEm, listaEntidade.validadeDias, null, false);
+
         // Ordem dos campos fixa: o JSON abaixo é exatamente o que o médico assina.
         const canonico = JSON.stringify({
             versao: 1,
@@ -254,6 +259,7 @@ export class ReceitaService {
             lista,
             listaControleId: listaEntidade.id,
             dataValidade,
+            validadePrimeiraCompra,
             itens,
             medico: { nome: usuarioMedico.nome, chavePublica: medico.chavePublica },
             paciente: { id: pacienteBase.usuarioId, nome: usuarioPaciente.nome, endereco },
