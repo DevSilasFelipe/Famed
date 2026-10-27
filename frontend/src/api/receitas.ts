@@ -19,10 +19,11 @@ export interface CorpoReceita {
 
 /** O que a tela de conferência mostra: tudo o que o médico vai assinar (sem token e sem hash). */
 export interface ResumoReceita {
-    lista: "C1" | "ANTIMICROBIANO" | "COMUM";
-    usoContinuo : boolean;
-    dataValidade: string | null; // AAAA-MM-DD
-    paciente    : { nome: string; cpf: string; endereco: string };
+    lista      : "C1" | "ANTIMICROBIANO" | "COMUM";
+    usoContinuo: boolean;
+    dataValidade          : string | null; // AAAA-MM-DD
+    validadePrimeiraCompra: string | null; // igual a dataValidade, exceto antimicrobiano de uso contínuo
+    paciente: { nome: string; cpf: string; endereco: string };
     itens: {
         medicamentoId: number;
         nome         : string;
