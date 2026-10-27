@@ -9,14 +9,16 @@ import formulario from "../../styles/Formulario.module.css";
 import styles from "./Prescricao.module.css";
 import { ErroApi } from "../../api/api";
 import { tokenLogado } from "../../auth/sessao";
+import { prepararReceita } from "../../api/receitas";
+import type { CorpoReceita } from "../../api/receitas";
 
 export default function Prescricao() {
-    const [paciente, setPaciente] = useState("");
     const [cpf, setCpf] = useState("");
     const [usoContinuo, setUsoContinuo] = useState(false);
     const [itens, setItens] = useState<ItemPrescricao[]>([itemVazio(1)]);
     const [arquivo, setArquivo] = useState<File | null>(null);
     const [erro, setErro] = useState("");
+    const [carregando, setCarregando] = useState(false);
 
     const [medicamentos, setMedicamentos] = useState<Medicamento[]>([]);
 
@@ -62,63 +64,57 @@ export default function Prescricao() {
     setArquivo(escolhido);
     }
 
-    function enviar(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setErro("");
+    async function enviar(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setErro("");
 
-    const escolhidos: Medicamento[] = [];
+        const escolhidos: Medicamento[] = [];
 
-    for (let i = 0; i < itens.length; i++) {
-        const item = itens[i];
-        const med = buscarMedicamento(medicamentos, item.tipo, item.medicamento);
+        for (let i = 0; i < itens.length; i++) {
+            const item = itens[i];
+            const med  = buscarMedicamento(medicamentos, item.tipo, item.medicamento);
 
-        if (!med) {
-        setErro(`Medicamento ${i + 1}: escolha um item da lista de sugestões.`);
-        return;
+            if (!med) {
+                setErro(`Medicamento ${i + 1}: escolha um item da lista de sugestões.`);
+                return;
+            }
+            if (escolhidos.some((outro) => outro.id === med.id)) {
+                setErro("O mesmo medicamento não pode aparecer duas vezes na mesma receita.");
+                return;
+            }
+            if (decimalParaNumero(item.dose) <= 0) {
+                setErro(`Medicamento ${i + 1}: a dose precisa ser maior que zero.`);
+                return;
+            }
+
+            escolhidos.push(med);
         }
-        if (escolhidos.some((outro) => outro.id === med.id)) {
-        setErro("O mesmo medicamento não pode aparecer duas vezes na mesma receita.");
-        return;
+
+        const corpo : CorpoReceita = {
+            pacienteCpf     : cpf,
+            usoContinuo,
+            itens           : itens.map((item, i) => ({
+            medicamentoId   : escolhidos[i].id,
+            dose            : decimalParaNumero(item.dose),
+            intervaloValor  : Number(item.intervaloValor),
+            intervaloUnidade: item.intervaloUnidade,
+            duracaoDias     : duracaoDefinidaPeloSistema(usoContinuo, item.tipo)
+                ? undefined
+                : Number(item.duracao),
+            condicaoUso: condicaoParaEnvio(item) ?? undefined,
+            quantidade : escolhidos[i].quantidadeManual ? Number(item.quantidade) : undefined,
+            })),
+        };
+
+        setCarregando(true);
+        try {
+            const resposta = await prepararReceita(corpo, tokenLogado() ?? undefined);
+            console.log("Resposta do preparar:", resposta); // temporário: a conferência vem no próximo commit
+        } catch (falha) {
+            setErro(falha instanceof ErroApi ? falha.message : "Não foi possível revisar a prescrição.");
+        } finally {
+            setCarregando(false);
         }
-        if (decimalParaNumero(item.dose) <= 0) {
-        setErro(`Medicamento ${i + 1}: a dose precisa ser maior que zero.`);
-        return;
-        }
-
-        escolhidos.push(med);
-    }
-
-    if (!arquivo) {
-        setErro("Selecione o arquivo de assinatura (.pem).");
-        return;
-    }
-
-    const dados = {
-        cpfPaciente: cpf,
-        usoContinuo,
-        itens: itens.map((item, i) => ({
-        medicamentoId: escolhidos[i].id,
-        dose: decimalParaNumero(item.dose),
-        intervaloValor: Number(item.intervaloValor),
-        intervaloUnidade: item.intervaloUnidade,
-        duracaoDias: duracaoDefinidaPeloSistema(usoContinuo, item.tipo)
-            ? null
-            : Number(item.duracao),
-        condicaoUso: condicaoParaEnvio(item),
-        quantidade: item.quantidade === "" ? null : Number(item.quantidade),
-        })),
-    };
-
-    console.log("Prescrição:", dados);
-    alert("Prescrição pronta para envio! (ainda sem back-end)");
-
-    setPaciente("");
-    setCpf("");
-    setUsoContinuo(false);
-    setItens([itemVazio(proximoId.current + 1)]);
-    proximoId.current += 1;
-    setArquivo(null);
-    if (inputArquivoRef.current) inputArquivoRef.current.value = "";
     }
 
     return (
@@ -126,20 +122,10 @@ export default function Prescricao() {
         <h1 className={formulario.titulo}>Nova Prescrição</h1>
 
         <form className={formulario.card} onSubmit={enviar}>
-        <div className={formulario.campo}>
-            <label htmlFor="paciente">Paciente</label>
-            <input
-            id="paciente"
-            type="text"
-            placeholder="Nome Completo"
-            value={paciente}
-            onChange={(e) => setPaciente(e.target.value)}
-            required
-            />
-        </div>
+        
 
         <div className={formulario.campo}>
-            <label htmlFor="cpf">CPF</label>
+            <label htmlFor="cpf">CPF do Paciente</label>
             <input
             id="cpf"
             type="text"
@@ -212,8 +198,8 @@ export default function Prescricao() {
             </p>
         )}
 
-        <button type="submit" className={formulario.botao}>
-            Gerar prescrição
+        <button type="submit" className={formulario.botao} disabled={carregando}>
+            {carregando ? "Revisando..." : "Revisar prescrição"}
         </button>
         </form>
     </div>
