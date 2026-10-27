@@ -1,12 +1,14 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import BlocoMedicamento, { condicaoParaEnvio, duracaoDefinidaPeloSistema, itemVazio } from "../../components/BlocoMedicamento";
 import type { CampoItem, ItemPrescricao } from "../../components/BlocoMedicamento";
-import { buscarMedicamento } from "../../data/medicamentos";
+import { buscarMedicamento, listarMedicamentos } from "../../data/medicamentos";
 import type { Medicamento } from "../../data/medicamentos";
 import { decimalParaNumero, somenteNumeros } from "../../utils/formatadores";
 import formulario from "../../styles/Formulario.module.css";
 import styles from "./Prescricao.module.css";
+import { ErroApi } from "../../api/api";
+import { tokenLogado } from "../../auth/sessao";
 
 export default function Prescricao() {
     const [paciente, setPaciente] = useState("");
@@ -15,6 +17,16 @@ export default function Prescricao() {
     const [itens, setItens] = useState<ItemPrescricao[]>([itemVazio(1)]);
     const [arquivo, setArquivo] = useState<File | null>(null);
     const [erro, setErro] = useState("");
+
+    const [medicamentos, setMedicamentos] = useState<Medicamento[]>([]);
+
+    useEffect(() => {
+        listarMedicamentos(tokenLogado() ?? undefined)
+        .then(setMedicamentos)
+        .catch((e) =>
+            setErro(e instanceof ErroApi ? e.message : "Não foi possível carregar os medicamentos."),
+    );
+    }, []);
 
     const proximoId = useRef(1);
     const inputArquivoRef = useRef<HTMLInputElement>(null);
@@ -58,7 +70,7 @@ export default function Prescricao() {
 
     for (let i = 0; i < itens.length; i++) {
         const item = itens[i];
-        const med = buscarMedicamento(item.tipo, item.medicamento);
+        const med = buscarMedicamento(medicamentos, item.tipo, item.medicamento);
 
         if (!med) {
         setErro(`Medicamento ${i + 1}: escolha um item da lista de sugestões.`);
@@ -159,7 +171,7 @@ export default function Prescricao() {
             item={item}
             numero={indice + 1}
             usoContinuo={usoContinuo}
-            quantidadeCalculada={null}
+            medicamentos={medicamentos}
             podeRemover={itens.length > 1}
             aoMudar={(campo, valor) => atualizarItem(item.idLocal, campo, valor)}
             aoRemover={() => removerItem(item.idLocal)}

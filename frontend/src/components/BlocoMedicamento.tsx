@@ -1,6 +1,7 @@
 import type { ChangeEvent } from "react";
 import type { TipoReceita } from "./CardReceita";
-import { buscarMedicamento, medicamentos, rotuloMedicamento } from "../data/medicamentos";
+import type { Medicamento } from "../data/medicamentos";
+import { buscarMedicamento, rotuloMedicamento } from "../data/medicamentos";
 import { somenteDecimal, somenteNumeros } from "../utils/formatadores";
 import formulario from "../styles/Formulario.module.css";
 import estilos from "./BlocoMedicamento.module.css";
@@ -39,7 +40,7 @@ export function duracaoDefinidaPeloSistema(
     usoContinuo: boolean,
     tipo: ItemPrescricao["tipo"],
 ): boolean {
-    return usoContinuo && (tipo === "antibiotico" || tipo === "controlado");
+    return usoContinuo && tipo !== "";
 }
 
 export function condicaoParaEnvio(item: ItemPrescricao): string | null {
@@ -52,7 +53,7 @@ interface BlocoMedicamentoProps {
     item: ItemPrescricao;
     numero: number;
     usoContinuo: boolean;
-    quantidadeCalculada: number | null;
+    medicamentos: Medicamento[],
     podeRemover: boolean;
     aoMudar: (campo: CampoItem, valor: string) => void;
     aoRemover: () => void;
@@ -64,12 +65,12 @@ export default function BlocoMedicamento({
     item,
     numero,
     usoContinuo,
-    quantidadeCalculada,
+    medicamentos,
     podeRemover,
     aoMudar,
     aoRemover,
 }: BlocoMedicamentoProps) {
-    const med = buscarMedicamento(item.tipo, item.medicamento);
+    const med = buscarMedicamento(medicamentos, item.tipo, item.medicamento);
     const duracaoBloqueada = duracaoDefinidaPeloSistema(usoContinuo, item.tipo);
     const opcoes = medicamentos.filter((m) => m.tipo === item.tipo);
 
@@ -227,12 +228,9 @@ export default function BlocoMedicamento({
         )}
 
         <div className={formulario.campo}>
-        <label htmlFor={id("quantidade")}>Quantidade total</label>
-        {quantidadeCalculada !== null ? (
-            <output id={id("quantidade")} className={estilos.saida}>
-            {quantidadeCalculada} {med ? med.unidadeDose : ""}
-            </output>
-        ) : (
+        {med?.quantidadeManual ? (
+            <>
+            <label htmlFor={id("quantidade")}>Quantidade de frascos</label>
             <input
             id={id("quantidade")}
             type="text"
@@ -243,6 +241,14 @@ export default function BlocoMedicamento({
             onChange={(e) => aoMudar("quantidade", somenteNumeros(e.target.value))}
             required
             />
+            </>
+        ) : (
+            <>
+            <label htmlFor={id("quantidade")}>Quantidade total</label>
+            <output id={id("quantidade")} className={estilos.saida}>
+            Calculada automaticamente
+            </output>
+            </>
         )}
         </div>
     </section>
