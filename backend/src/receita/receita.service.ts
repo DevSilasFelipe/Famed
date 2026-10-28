@@ -177,10 +177,12 @@ export class ReceitaService {
             itens: itens.map((item) => {
                 const med = porId.get(item.medicamentoId)!; // a FK garante que existe
                 return {
-                    nome      : med.nome,
-                    dosagem   : med.dosagem,
-                    quantidade: item.quantidade,
-                    posologia : item.posologia,
+                    nome             : med.nome,
+                    dosagem          : med.dosagem,
+                    formaFarmaceutica: med.formaFarmaceutica,
+                    unidadeDose      : med.unidadeDose,
+                    quantidade       : item.quantidade,
+                    posologia        : item.posologia,
                 };
             }),
         };
