@@ -8,6 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { PacienteModule } from './paciente/paciente.module';
 import { FarmaciaModule } from './farmacia/farmacia.module';
 import { MedicoModule } from './medico/medico.module';
+import { MedicamentoModule } from './medicamento/medicamento.module';
+import { ReceitaModule } from './receita/receita.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),
@@ -31,6 +33,8 @@ import { MedicoModule } from './medico/medico.module';
             PacienteModule,
             FarmaciaModule,
             MedicoModule,
+            MedicamentoModule,
+            ReceitaModule,
   ],
   controllers: [HealthController],
   providers: [],

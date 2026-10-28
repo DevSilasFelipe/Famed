@@ -1,28 +1,58 @@
 import type { TipoReceita } from "../components/CardReceita";
+import { get } from "../api/api";
 
 export interface Medicamento {
-    id: number;
-    nome: string;
-    dosagem: string;
+    id               : number;
+    nome             : string;
+    dosagem          : string;
     formaFarmaceutica: string;
-    unidadeDose: string;
-    tipo: TipoReceita;
+    unidadeDose      : string;
+    tipo             : TipoReceita;
+    quantidadeManual : boolean; // true: o médico digita a quantidade de frascos
 }
 
-export const medicamentos: Medicamento[] = [
-    { id: 1, nome: "Dipirona", dosagem: "500 mg", formaFarmaceutica: "Comprimido", unidadeDose: "comprimido(s)", tipo: "comum" },
-    { id: 2, nome: "Paracetamol", dosagem: "750 mg", formaFarmaceutica: "Comprimido", unidadeDose: "comprimido(s)", tipo: "comum" },
-    { id: 3, nome: "Dipirona", dosagem: "500 mg/mL", formaFarmaceutica: "Gotas", unidadeDose: "gota(s)", tipo: "comum" },
-    { id: 4, nome: "Amoxicilina", dosagem: "500 mg", formaFarmaceutica: "Cápsula", unidadeDose: "cápsula(s)", tipo: "antibiotico" },
-    { id: 5, nome: "Azitromicina", dosagem: "500 mg", formaFarmaceutica: "Comprimido", unidadeDose: "comprimido(s)", tipo: "antibiotico" },
-    { id: 6, nome: "Amitriptilina", dosagem: "25 mg", formaFarmaceutica: "Comprimido", unidadeDose: "comprimido(s)", tipo: "controlado" },
-    { id: 7, nome: "Fluoxetina", dosagem: "20 mg", formaFarmaceutica: "Cápsula", unidadeDose: "cápsula(s)", tipo: "controlado" },
-];
+interface MedicamentoApi {
+    id               : number;
+    nome             : string;
+    dosagem          : string;
+    formaFarmaceutica: string;
+    unidadeDose      : string;
+    listaControle    : string; // COMUM | ANTIMICROBIANO | C1
+    quantidadeManual : boolean;
+}
+
+const tipoPorLista: Record<string, TipoReceita> = {
+    COMUM         : "comum",
+    ANTIMICROBIANO: "antibiotico",
+    C1            : "controlado",
+};
+
+export async function listarMedicamentos(token?: string): Promise<Medicamento[]> {
+    const lista = await get<MedicamentoApi[]>("/medicamentos", token);
+
+    return lista.flatMap((m) => {
+        const tipo = tipoPorLista[m.listaControle];
+        if (!tipo) return []; // lista que o formulário ainda não conhece
+        return [{
+            id               : m.id,
+            nome             : m.nome,
+            dosagem          : m.dosagem,
+            formaFarmaceutica: m.formaFarmaceutica,
+            unidadeDose      : m.unidadeDose,
+            quantidadeManual : m.quantidadeManual,
+            tipo,
+        }];
+    });
+}
 
 export function rotuloMedicamento(m: Medicamento): string {
     return `${m.nome} ${m.dosagem} (${m.formaFarmaceutica})`;
 }
 
-export function buscarMedicamento(tipo: string, rotulo: string): Medicamento | undefined {
-    return medicamentos.find((m) => m.tipo === tipo && rotuloMedicamento(m) === rotulo);
+export function buscarMedicamento(
+    lista : Medicamento[],
+    tipo  : string,
+    rotulo: string,
+): Medicamento | undefined {
+    return lista.find((m) => m.tipo === tipo && rotuloMedicamento(m) === rotulo);
 }
