@@ -9,9 +9,10 @@ import formulario from "../../styles/Formulario.module.css";
 import styles from "./Prescricao.module.css";
 import { ErroApi } from "../../api/api";
 import { tokenLogado } from "../../auth/sessao";
-import { prepararReceita } from "../../api/receitas";
-import type { CorpoReceita, RespostaPreparar } from "../../api/receitas";
+import { emitirReceita, prepararReceita } from "../../api/receitas";
+import type { CorpoReceita, RespostaPreparar, ReceitaEmitida } from "../../api/receitas";
 import ConferenciaReceita from "../../components/ConferenciaReceita";
+import { assinarTexto } from "../../utils/assinatura";
 
 export default function Prescricao() {
     const [cpf, setCpf] = useState("");
@@ -21,6 +22,9 @@ export default function Prescricao() {
     const [erro, setErro] = useState("");
     const [carregando, setCarregando] = useState(false);
     const [previa, setPrevia] = useState<RespostaPreparar | null>(null);
+    const [corpoPreparado, setCorpoPreparado] = useState<CorpoReceita | null>(null);
+    const [emitindo, setEmitindo] = useState(false);
+    const [emitida, setEmitida] = useState<ReceitaEmitida | null>(null);
 
     const [medicamentos, setMedicamentos] = useState<Medicamento[]>([]);
 
@@ -112,12 +116,66 @@ export default function Prescricao() {
         try {
             const resposta = await prepararReceita(corpo, tokenLogado() ?? undefined);
             setPrevia(resposta);
+            setCorpoPreparado(corpo);
             window.scrollTo({ top: 0 });
         } catch (falha) {
             setErro(falha instanceof ErroApi ? falha.message : "Não foi possível revisar a prescrição.");
         } finally {
             setCarregando(false);
         }
+    }
+
+    async function emitir() {
+        if (!previa || !corpoPreparado) return;
+        if (!arquivo) {
+            setErro("Selecione o arquivo de assinatura (.pem).")
+            return
+        }
+
+        setErro("");
+        setEmitindo(true);
+        try {
+            const pem        = await arquivo.text();
+            const assinatura = await assinarTexto(pem, previa.textoCanonico);
+            const resultado  = await emitirReceita(
+                { ...corpoPreparado, selo: previa.selo, assinatura },
+                tokenLogado() ?? undefined,
+            );
+            setEmitida(resultado);
+            window.scrollTo({ top: 0 });
+        } catch (falha) {
+            setErro(falha instanceof Error ? falha.message : "Não foi possível emitir a prescrição.")
+        } finally {
+            setEmitindo(false);
+        }
+    }
+
+    function novaPrescricao() {
+        setCpf("");
+        setUsoContinuo(false);
+        proximoId.current += 1;
+        setItens([itemVazio(proximoId.current)]);
+        setArquivo(null);
+        setPrevia(null);
+        setCorpoPreparado(null);
+        setEmitida(null);
+        setErro("");
+    }
+
+    if (emitida) {
+        return (
+            <div className={formulario.pagina}>
+                <h1 className={formulario.titulo}>Prescrição Emitida</h1>
+                <div className={formulario.card}>
+                    <p>
+                        Token da Receita: <strong>{emitida.token}</strong>
+                    </p>
+                    <button type="button" className={formulario.botao} onClick={novaPrescricao}>
+                        Nova Prescrição
+                    </button>
+                </div>
+            </div>
+        );
     }
 
     if (previa) {
@@ -158,7 +216,16 @@ export default function Prescricao() {
                             )}
                         </>
                     }
-                />
+                >
+                    <button
+                        type="button"
+                        className={formulario.botao}
+                        onClick={emitir}
+                        disabled={emitindo}
+                    >
+                        {emitindo ? "Assinando..." : "Gerar Prescrição"}
+                    </button>
+                </ConferenciaReceita>
             </div>
         )
     }
