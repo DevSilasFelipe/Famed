@@ -1,7 +1,7 @@
 function pemParaDer(pem: string) {
     const base64 = pem
-        .replace("-----BEGIN PRIVATE KEY-----", "")
-        .replace(/\s+/g, "");
+        .replace(/-----[^-]+-----/g, "") // remove as linhas BEGIN/END, seja qual for o rótulo
+        .replace(/\s+/g, ""); // remove quebras de linha e espaços
     return Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
 }
 
