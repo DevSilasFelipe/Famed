@@ -183,7 +183,9 @@ export default function BlocoMedicamento({
 
         <div className={formulario.linha}>
         <div className={`${formulario.grupo} ${estilos.expande}`}>
-            <label htmlFor={id("duracao")}>Duração (dias)</label>
+            <label htmlFor={id("duracao")}>
+                Duração ({item.intervaloUnidade === "SEMANAS" ? "semanas" : "dias"})
+            </label>
             <input
             id={id("duracao")}
             type="text"

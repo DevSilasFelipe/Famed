@@ -106,7 +106,7 @@ export default function Prescricao() {
             intervaloUnidade: item.intervaloUnidade,
             duracaoDias     : duracaoDefinidaPeloSistema(usoContinuo, item.tipo)
                 ? undefined
-                : Number(item.duracao),
+                : Number(item.duracao) * (item.intervaloUnidade === "SEMANAS" ? 7 : 1),
             condicaoUso: condicaoParaEnvio(item) ?? undefined,
             quantidade : escolhidos[i].quantidadeManual ? Number(item.quantidade) : undefined,
             })),
