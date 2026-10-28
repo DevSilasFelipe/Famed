@@ -124,7 +124,41 @@ export default function Prescricao() {
         return (
             <div className={formulario.pagina}>
                 <h1 className={formulario.titulo}>Nova Prescrição</h1>
-                <ConferenciaReceita resumo={previa.resumo} aoVoltar={() => setPrevia(null)} />
+                <ConferenciaReceita 
+                    resumo={previa.resumo} 
+                    aoVoltar={() => {
+                        setPrevia(null);
+                        setErro("");
+                    }}
+                    assinatura={
+                        <>
+                            <div className={styles.assinatura}>
+                                <button
+                                    type="button"
+                                    className={styles.escolher}
+                                    onClick={() => inputArquivoRef.current?.click()}    
+                                >
+                                    Escolher arquivo (.pem)
+                                </button>
+                                <span className={styles.nomeArquivo}>
+                                    {arquivo ? arquivo.name : "Nenhum arquivo selecionado"}
+                                </span>
+                            </div>
+                            <input 
+                                ref={inputArquivoRef}
+                                type="file"
+                                accept=".pem"
+                                hidden
+                                onChange={escolherArquivo} 
+                            />
+                            {erro && (
+                                <p className={styles.erro} role="alert">
+                                    {erro}
+                                </p>
+                            )}
+                        </>
+                    }
+                />
             </div>
         )
     }
@@ -179,30 +213,6 @@ export default function Prescricao() {
         <button type="button" className={styles.adicionar} onClick={adicionarItem}>
             + Adicionar outro medicamento
         </button>
-
-        <div className={formulario.campo}>
-            <label htmlFor="assinatura">Assinatura digital</label>
-            <div className={styles.assinatura}>
-            <button
-                id="assinatura"
-                type="button"
-                className={styles.escolher}
-                onClick={() => inputArquivoRef.current?.click()}
-            >
-                Escolher arquivo (.pem)
-            </button>
-            <span className={styles.nomeArquivo}>
-                {arquivo ? arquivo.name : "Nenhum arquivo selecionado"}
-            </span>
-            </div>
-            <input
-            ref={inputArquivoRef}
-            type="file"
-            accept=".pem"
-            hidden
-            onChange={escolherArquivo}
-            />
-        </div>
 
         {erro && (
             <p className={styles.erro} role="alert">

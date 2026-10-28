@@ -20,12 +20,13 @@ function formatarCpf(cpf: string): string {
 }
 
 interface ConferenciaReceitaProps {
-    resumo   : ResumoReceita;
-    aoVoltar : () => void;
-    children?: ReactNode; // ações extras (no passo 3: assinar e emitir)
+    resumo     : ResumoReceita;
+    aoVoltar   : () => void;
+    children?  : ReactNode; // ações extras (no passo 3: assinar e emitir)
+    assinatura?: ReactNode; // campo do arquivo .pem (e erros), vindo da tela de prescrição
 }
 
-export default function ConferenciaReceita({ resumo, aoVoltar, children }: ConferenciaReceitaProps ) {
+export default function ConferenciaReceita({ resumo, aoVoltar, assinatura, children }: ConferenciaReceitaProps ) {
     const { lista, usoContinuo, dataValidade, validadePrimeiraCompra, paciente, itens } = resumo;
 
     const doisPrazos =
@@ -97,6 +98,17 @@ export default function ConferenciaReceita({ resumo, aoVoltar, children }: Confe
                     <p className={estilos.nota}>Esta Receita não tem prazo de validade.</p>
                 )}
             </section>
+
+            {assinatura && (
+                <section className={estilos.secao}>
+                    <h3>Assinatura Digital</h3>
+                    <p className={estilos.nota}>
+                        Escolha o arquivo .pem da sua chave privada. Ele é lido apenas neste
+                        computador e nunca é enviado ao servidor.
+                    </p>
+                    <div className={estilos.slotAssinatura}>{assinatura}</div>
+                </section>
+            )}
 
             <div className={estilos.acoes}>
                 <button type="button" className={estilos.voltar} onClick={aoVoltar}>
