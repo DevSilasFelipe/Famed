@@ -44,3 +44,21 @@ export interface RespostaPreparar {
 export function prepararReceita(corpo: CorpoReceita, token?: string) : Promise<RespostaPreparar> {
     return post<RespostaPreparar>("/receitas/preparar", corpo, token);
 }
+
+export interface CorpoEmissao extends CorpoReceita {
+    selo      : string; // devolvido pelo preparar
+    assinatura: string; // base64
+}
+
+export interface ReceitaEmitida {
+    id          : number;
+    token       : string;
+    lista       : string;
+    emitidaEm   : string;
+    dataValidade: string | null;
+    hash        : string;
+}
+
+export function emitirReceita(corpo: CorpoEmissao, token?: string): Promise<ReceitaEmitida> {
+    return post<ReceitaEmitida>("/receitas", corpo, token);
+}
