@@ -60,3 +60,27 @@ export function post<T>(rota: string, corpo: unknown, token?: string) : Promise<
 export function get<T>(rota: string, token?: string): Promise<T> {
     return requisitar<T>("GET", rota, undefined, token);
 }
+
+/**
+ * Baixa um arquivo (ex.: PDF) com o Bearer e devolve como Blob.
+ * Em caso de recusa, lança ErroApi com a mensagem do backend (que responde JSON nos erros).
+ */
+export async function baixarArquivo(rota: string, token?: string): Promise<Blob> {
+    let resposta: Response;
+    try {
+        resposta = await fetch(`${API_URL}${rota}`, {
+            headers: token? { Authorization: `Bearer ${token}` } : {},
+        });
+    } catch {
+        throw new ErroApi("Não foi possível conectar ao servidor.", 0);
+    }
+
+    if (!resposta.ok) {
+        const dados = await resposta.json().catch(() => null);
+        const msg   = dados?.message;
+        const texto = Array.isArray(msg) ? msg.join("\n") : (msg ?? "Erro inesperado.");
+        throw new ErroApi(texto, resposta.status);
+    }
+
+    return resposta.blob();
+}

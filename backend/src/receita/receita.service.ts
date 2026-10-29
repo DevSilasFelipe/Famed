@@ -21,6 +21,7 @@ import {
 import { Medicamento } from "../medicamento/medicamento.entity";
 import { formaExigeQuantidadeManual } from "../medicamento/forma-farmaceutica";
 import { createHash, createVerify, randomInt } from "crypto";
+import { ListaControle } from "../lista-controle/lista-controle.entity";
 
 const ALFABETO_TOKEN = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 const SELO_VALIDADE_SEGUNDOS = 10 * 60;
@@ -145,6 +146,46 @@ export class ReceitaService {
             dataValidade: receita.dataValidade,
             hash: receita.hashSha256,
         }
+    }
+
+    /** Carrega tudo o que o PDF precisa. Só o médico emissor e o paciente enxergam; qualquer outro recebe 404. */
+    async buscarParaPdf(id: number, usuarioId: number) {
+        const receita = await this.dataSource.getRepository(Receita).findOneBy({ id });
+        if (!receita || (receita.medicoId !== usuarioId && receita.pacienteId !== usuarioId)) {
+            throw new NotFoundException({ statusCode: 404, message: 'Receita não encontrada.' });
+        }
+
+        const itens = await this.dataSource.getRepository(ItemReceita).find({
+            where: { receitaId: id},
+            order: { id: 'ASC' },
+        });
+
+        const medicamentos = await this.dataSource.getRepository(Medicamento).findBy({
+            id: In(itens.map((i) => i.medicamentoId)),
+        });
+        const porId = new Map(medicamentos.map((m) => [m.id, m]));
+
+        const lista    = await this.dataSource.getRepository(ListaControle).findOneByOrFail({ id: receita.listaControleId });
+        const medico   = await this.dataSource.getRepository(Medico).findOneByOrFail({ usuarioId: receita.medicoId });
+        const paciente = await this.dataSource.getRepository(Paciente).findOneByOrFail({ usuarioId: receita.pacienteId });
+
+        return {
+            receita,
+            lista,
+            medico  : { crm: medico.crm, uf: medico.uf },
+            paciente: { cpf: paciente.cpf },
+            itens: itens.map((item) => {
+                const med = porId.get(item.medicamentoId)!; // a FK garante que existe
+                return {
+                    nome             : med.nome,
+                    dosagem          : med.dosagem,
+                    formaFarmaceutica: med.formaFarmaceutica,
+                    unidadeDose      : med.unidadeDose,
+                    quantidade       : item.quantidade,
+                    posologia        : item.posologia,
+                };
+            }),
+        };
     }
 
     // ---------------------------------------------------------------- internos
