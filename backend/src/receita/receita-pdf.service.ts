@@ -164,7 +164,7 @@ export class ReceitaPdfService {
         const yRodape = ALTURA_PAGINA - MARGEM - 34;
 
         for (let i = 0; i < count; i++) {
-            doc.switchToPage(start + 1);
+            doc.switchToPage(start + i);
 
             doc.y = yRodape;
             this.rotuloValor(doc, 'TOKEN:', d.token, MARGEM, 300, 10);
