@@ -1,4 +1,4 @@
-import { post } from "./api";
+import { post, baixarArquivo } from "./api";
 
 /** Um medicamento como o backend espera receber. Campos opcionais devem ser omitidos, não enviados como null. */
 export interface ItemReceitaEnvio {
@@ -61,4 +61,9 @@ export interface ReceitaEmitida {
 
 export function emitirReceita(corpo: CorpoEmissao, token?: string): Promise<ReceitaEmitida> {
     return post<ReceitaEmitida>("/receitas", corpo, token);
+}
+
+/** Baixa o PDF da receita (só o médico emissor e o paciente da receita conseguem). */
+export function baixarPdfReceita(id:number, token?: string): Promise<Blob> {
+    return baixarArquivo(`/receitas/${id}/pdf`, token);
 }
