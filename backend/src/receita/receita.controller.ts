@@ -9,7 +9,7 @@ import { Request } from "express";
 import { EmitirReceitaDto } from "./dto/emitir-receita.dto";
 import { ReceitaPdfService } from "./receita-pdf.service";
 import type { Response } from "express";
-import { montarDadosPfd } from "./receita-pdf-dados";
+import { montarDadosPdf } from "./receita-pdf-dados";
 
 @Controller('receitas')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -56,7 +56,7 @@ export class ReceitaController {
         @Res({ passthrough: true }) res: Response,
     ) {
         const leitura = await this.service.buscarParaPdf(id, req.user.sub);
-        const arquivo = await this.pdf.gerar(montarDadosPfd(leitura));
+        const arquivo = await this.pdf.gerar(montarDadosPdf(leitura));
 
         await this.auditoria.registrar({
             usuarioId: req.user.sub,

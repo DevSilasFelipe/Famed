@@ -58,16 +58,18 @@ function montarValidade(leitura: Leitura): { rotulo: string; valor: string }[] {
     return [{ rotulo: 'DATA DE VALIDADE:', valor: formatarDataIso(receita.dataValidade) }];
 }
 
-export function montarDadosPfd(leitura: Leitura): DadosPdf {
+export function montarDadosPdf(leitura: Leitura): DadosPdf {
     const { receita, lista, medico, paciente, itens } = leitura;
     const e = receita.emitidaEm;
     const crm = `${medico.crm} - ${medico.uf}`;
+    const data = `${zeroEsquerda(e.getDate())}/${zeroEsquerda(e.getMonth() + 1)}/${e.getFullYear()}`;
+    const hora = `${zeroEsquerda(e.getHours())}:${zeroEsquerda(e.getMinutes())}`;
 
     return {
         emitente   : { nome: receita.medicoNome, crm },
         tipo       : lista.codigo,
         usoContinuo: receita.usoContinuo,
-        data       : `${zeroEsquerda(e.getDate())}/${zeroEsquerda(e.getMonth() + 1)}/${e.getFullYear()}`,
+        data       : data,
         validade   : montarValidade(leitura),
         paciente: {
             nome: receita.pacienteNome,
@@ -83,9 +85,7 @@ export function montarDadosPfd(leitura: Leitura): DadosPdf {
         token: receita.token,
         numeroSncr: receita.numeroSncr,
         assinatura: {
-            assinadoPor: `Assinado digitalmente por ${receita.medicoNome}, CRM ${crm}, em
-                          ${zeroEsquerda(e.getDate())}/${zeroEsquerda(e.getMonth() + 1)}/${e.getFullYear()}
-                          às ${zeroEsquerda(e.getHours())}:${zeroEsquerda(e.getMinutes())}`,
+            assinadoPor: `Assinado digitalmente por ${receita.medicoNome}, CRM ${crm}, em ${data} às ${hora}`,
             algoritmo: 'RSA / SHA-256',
             hash: receita.hashSha256,
         },
