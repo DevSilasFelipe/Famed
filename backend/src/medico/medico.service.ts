@@ -7,6 +7,7 @@ import { Medico } from './medico.entity';
 import { CfmRegistro } from '../cfm-registro/cfm-registro.entity';
 import { CriarMedicoDto } from './dto/criar-medico.dto';
 import { paraResposta, UsuarioResposta } from '../common/usuario-resposta';
+import { VwMeusPacientes } from './vw-meus-pacientes.view';
 
 @Injectable()
 export class MedicoService {
@@ -41,6 +42,15 @@ export class MedicoService {
             return paraResposta(usuario);
         });
     }
+
+    async listarMeusPacientes(medicoId: number) {
+        return this.dataSource.getRepository(VwMeusPacientes).find({
+            where: { medicoId },
+            order: { ultimaReceitaEm: 'DESC' }
+        })
+    }
+
+
 
     async validar(dto:CriarMedicoDto): Promise<void> {
         this.validarChavePublica(dto.chavePublica);

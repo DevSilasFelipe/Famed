@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { DataSource, In } from "typeorm";
@@ -22,6 +22,8 @@ import { Medicamento } from "../medicamento/medicamento.entity";
 import { formaExigeQuantidadeManual } from "../medicamento/forma-farmaceutica";
 import { createHash, createVerify, randomInt } from "crypto";
 import { ListaControle } from "../lista-controle/lista-controle.entity";
+import { VwMinhasReceitasMedico } from "./views/vw-minhas-receitas-medico.view";
+import { VwMinhasReceitasPaciente } from "./views/vw-minhas-receitas-paciente.view";
 
 const ALFABETO_TOKEN = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 const SELO_VALIDADE_SEGUNDOS = 10 * 60;
@@ -147,6 +149,25 @@ export class ReceitaService {
             hash: receita.hashSha256,
         }
     }
+
+    async listarMinhas(usuarioId: number, perfil: string) {
+        if (perfil === 'MEDICO') {
+            return this.dataSource.getRepository(VwMinhasReceitasMedico).find({
+                where: { medicoId: usuarioId },
+                order: { emitidaEm: 'DESC' },
+            });
+        }
+
+        if (perfil === 'PACIENTE') {
+            return this.dataSource.getRepository(VwMinhasReceitasPaciente).find({
+                where: { pacienteId: usuarioId },
+                order: { emitidaEm: 'DESC' }
+            });
+        }
+
+        throw new ForbiddenException('Acesso negado.');
+    }
+
 
     /** Carrega tudo o que o PDF precisa. Só o médico emissor e o paciente enxergam; qualquer outro recebe 404. */
     async buscarParaPdf(id: number, usuarioId: number) {

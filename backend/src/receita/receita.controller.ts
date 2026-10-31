@@ -48,6 +48,13 @@ export class ReceitaController {
         return receita;
     }
 
+    @Get('minhas')
+    @Roles('MEDICO', 'PACIENTE')
+    listarMinhas(@Req() req: Request & { user: JwtPayload }) {
+        return this.service.listarMinhas(req.user.sub, req.user.perfil);
+    }
+
+
     @Get(':id/pdf')
     @Roles('MEDICO', 'PACIENTE') // sobrescreve o @Roles('MEDICO') da classe
     async baixarPdf(
