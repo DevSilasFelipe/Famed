@@ -175,10 +175,37 @@ export class ReceitaService {
         if (!receita || (receita.medicoId !== usuarioId && receita.pacienteId !== usuarioId)) {
             throw new NotFoundException({ statusCode: 404, message: 'Receita não encontrada.' });
         }
+        return this.carregarDetalhes(receita);
+    }
 
+    async buscarPorToken(token: string) {
+        const receita = await this.dataSource.getRepository(Receita).findOneBy({ token });
+        if (!receita) {
+            throw new NotFoundException({ statusCode: 404, message: 'Receita não encontrada.' })
+        }
+
+        const detalhes = await this.carregarDetalhes(receita);
+
+        return {
+            id          : receita.id,
+            token       : receita.token,
+            emitidaEm   : receita.emitidaEm,
+            dataValidade: receita.dataValidade,
+            vencida     : this.estaVencida(receita.dataValidade),
+            usoContinuo : receita.usoContinuo,
+            lista       : { codigo: detalhes.lista.codigo, descricao: detalhes.lista.descricao },
+            medico      : { nome: receita.medicoNome, crm: detalhes.medico.crm, uf: detalhes.medico.uf },
+            paciente    : { nome: receita.pacienteNome, cpf: detalhes.paciente.cpf },
+            itens       : detalhes.itens,
+        };
+    }
+
+    // ---------------------------------------------------------------- internos
+
+    private async carregarDetalhes(receita: Receita) {
         const itens = await this.dataSource.getRepository(ItemReceita).find({
-            where: { receitaId: id},
-            order: { id: 'ASC' },
+            where: { receitaId: receita.id },
+            order: { id: 'ASC' }
         });
 
         const medicamentos = await this.dataSource.getRepository(Medicamento).findBy({
@@ -186,9 +213,9 @@ export class ReceitaService {
         });
         const porId = new Map(medicamentos.map((m) => [m.id, m]));
 
-        const lista    = await this.dataSource.getRepository(ListaControle).findOneByOrFail({ id: receita.listaControleId });
-        const medico   = await this.dataSource.getRepository(Medico).findOneByOrFail({ usuarioId: receita.medicoId });
-        const paciente = await this.dataSource.getRepository(Paciente).findOneByOrFail({ usuarioId: receita.pacienteId });
+        const lista = await this.dataSource.getRepository(ListaControle).findOneByOrFail({ id: receita.listaControleId });
+        const medico = await this.dataSource.getRepository(Medico).findOneByOrFail({ usuarioId: receita.medicoId });
+        const paciente = await this.dataSource.getRepository(Paciente).findOneByOrFail({ usuarioId: receita.pacienteId })
 
         return {
             receita,
@@ -209,7 +236,13 @@ export class ReceitaService {
         };
     }
 
-    // ---------------------------------------------------------------- internos
+    private estaVencida(dataValidade: string | null): boolean {
+        if (!dataValidade) return false;
+        const hoje = new Date();
+        const hojeTexto = 
+            `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
+        return dataValidade < hojeTexto; // AAAA-MM-DD compara certo como texto
+    }
 
     /** Fonte única do conteúdo da receita: preparar e emitir passam por aqui. */
     private async montar(dto: PrepararReceitaDto, medicoId: number, token: string, emitidaEm: Date) {
