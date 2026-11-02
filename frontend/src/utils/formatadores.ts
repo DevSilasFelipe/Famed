@@ -18,3 +18,12 @@ export function somenteDecimal(texto: string): string {
 export function decimalParaNumero(texto: string): number {
     return Number(texto.replace(",", "."));
 }
+
+export function formatarCpf(cpf: string): string {
+    return cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.$2.$3-$4");
+}
+
+/** Data de instante (ISO com hora) vira DD/MM/AAAA no fuso do navegador. */
+export function formatarInstante(iso: string): string {
+    return new Date(iso).toLocaleDateString("pt-BR");
+}

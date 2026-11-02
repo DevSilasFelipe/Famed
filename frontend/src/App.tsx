@@ -11,11 +11,13 @@ import MinhasReceitas from "./pages/paciente/MinhasReceitas";
 import BuscarReceita from "./pages/farmacia/BuscarReceita";
 import Cadastro from "./pages/Cadastro";
 import Home from "./pages/Home";
+import MeusPacientes from "./pages/medico/MeusPacientes"
 
 const menuMedico: NavbarProps = {
   links: [
     { to: "/medico", texto: "Home" },
-    { to: "/medico/pacientes", texto: "Meus Pacientes" },
+    { to: "/medico/pacientes", texto: "Novo Paciente" },
+    { to: "/medico/meus-pacientes", texto: "Meus Pacientes" },
     { to: "/medico/receitas", texto: "Minhas Receitas" },
   ],
   acao: { to: "/medico/prescricao", texto: "CRIAR" },
@@ -48,6 +50,7 @@ export default function App() {
           <Route path="/medico" element={<Layout {...menuMedico} />}>
             <Route index element={<Inicio />} />
             <Route path="pacientes" element={<CadastrarPaciente />} />
+            <Route path="meus-pacientes" element={<MeusPacientes />} />
             <Route path="receitas" element={<Historico />} />
             <Route path="prescricao" element={<Prescricao />} />
           </Route>

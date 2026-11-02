@@ -11,3 +11,14 @@
     flex-wrap: wrap;
     justify-content: center;
 }
+
+.mensagem {
+    font-size: 18px;
+    color: #1d1d1d;
+    margin-bottom: 24px;
+}
+
+.erro {
+    color: #bf1736;
+    font-weight: 600;
+}

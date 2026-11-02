@@ -9,10 +9,11 @@ import formulario from "../../styles/Formulario.module.css";
 import styles from "./Prescricao.module.css";
 import { ErroApi } from "../../api/api";
 import { tokenLogado } from "../../auth/sessao";
-import { emitirReceita, prepararReceita, baixarPdfReceita } from "../../api/receitas";
+import { emitirReceita, prepararReceita } from "../../api/receitas";
 import type { CorpoReceita, RespostaPreparar, ReceitaEmitida } from "../../api/receitas";
 import ConferenciaReceita from "../../components/ConferenciaReceita";
 import { assinarTexto } from "../../utils/assinatura";
+import { useAbrirPdf } from "../../hooks/useAbrirPdf";
 
 export default function Prescricao() {
     const [cpf, setCpf] = useState("");
@@ -25,7 +26,7 @@ export default function Prescricao() {
     const [corpoPreparado, setCorpoPreparado] = useState<CorpoReceita | null>(null);
     const [emitindo, setEmitindo] = useState(false);
     const [emitida, setEmitida] = useState<ReceitaEmitida | null>(null);
-    const [abrindoPdf, setAbrindoPdf] = useState(false);
+    const { abrirPdf, abrindoPdf, erro: erroPdf, limparErro } = useAbrirPdf();
 
     const [medicamentos, setMedicamentos] = useState<Medicamento[]>([]);
 
@@ -151,31 +152,6 @@ export default function Prescricao() {
         }
     }
 
-    async function abrirPdf() {
-        if (!emitida) return;
-
-        // A aba abre agora, no clique; senão o navegador bloqueia o pop-up depois do await
-        const aba = window.open("", "_blank");
-        if (!aba) {
-            setErro("Permita pop-ups neste site para abrir o PDF.");
-            return;
-        }
-
-        setErro("");
-        setAbrindoPdf(true);
-        try {
-            const pdf = await baixarPdfReceita(emitida.id, tokenLogado() ?? undefined);
-            const url = URL.createObjectURL(pdf);
-            aba.location.href = url;
-            setTimeout(() => URL.revokeObjectURL(url), 60_000) // libera a memória depois de 1 min
-        } catch (falha) {
-            aba.close();
-            setErro(falha instanceof Error ? falha.message : "Não foi possível abrir o PDF.");
-        } finally {
-            setAbrindoPdf(false);
-        }
-    }
-
     function novaPrescricao() {
         setCpf("");
         setUsoContinuo(false);
@@ -185,7 +161,7 @@ export default function Prescricao() {
         setPrevia(null);
         setCorpoPreparado(null);
         setEmitida(null);
-        setErro("");
+        limparErro(); 
     }
 
     if (emitida) {
@@ -196,13 +172,18 @@ export default function Prescricao() {
                     <p>
                         Token da Receita: <strong>{emitida.token}</strong>
                     </p>
-                    {erro && (
+                    {erroPdf && (
                         <p className={styles.erro} role="alert">
-                            {erro}
+                            {erroPdf}
                         </p>
                     )}
                     <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                        <button type="button" className={formulario.botao} onClick={abrirPdf} disabled={abrindoPdf}>
+                        <button
+                        type="button" 
+                        className={formulario.botao} 
+                        onClick={() => abrirPdf(emitida.id)} 
+                        disabled={abrindoPdf}
+                        >
                             {abrindoPdf ? "Abrindo..." : "Abrir PDF"}
                         </button>
                         <button type="button" className={formulario.botao} onClick={novaPrescricao}>
@@ -222,7 +203,7 @@ export default function Prescricao() {
                     resumo={previa.resumo} 
                     aoVoltar={() => {
                         setPrevia(null);
-                        setErro("");
+                        limparErro();
                     }}
                     assinatura={
                         <>

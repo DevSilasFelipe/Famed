@@ -58,3 +58,8 @@
     color: #000547;
     cursor: pointer;
 }
+
+.expandir:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
