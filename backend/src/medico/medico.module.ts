@@ -5,10 +5,13 @@ import { Medico } from './medico.entity';
 import { CfmRegistro } from '../cfm-registro/cfm-registro.entity';
 import { MedicoController } from './medico.controller';
 import { MedicoService } from './medico.service';
+import { AuthModule} from '../auth/auth.module';
+import { VwMeusPacientes } from './vw-meus-pacientes.view';
+import { MedicoPacientesController } from './medico-pacientes.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Usuario, Medico, CfmRegistro])],
-  controllers: [MedicoController],
+  imports: [TypeOrmModule.forFeature([Usuario, Medico, CfmRegistro, VwMeusPacientes]), AuthModule],
+  controllers: [MedicoController, MedicoPacientesController],
   providers: [MedicoService],
 })
 export class MedicoModule {}

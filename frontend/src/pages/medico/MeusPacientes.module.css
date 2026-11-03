@@ -1,0 +1,46 @@
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    width: 100%;
+    max-width: 1150px;
+}
+
+.card {
+    background-color: #ffffff;
+    border-top: 40px solid #000547;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    color: #1d1d1d;
+}
+
+.card h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.card dl > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 0;
+    font-size: 14px;
+    border-bottom: 1px solid #eeefff;
+}
+
+.card dt {
+    font-weight: 600;
+}
+
+.mensagem {
+    font-size: 18px;
+    color: #1d1d1d;
+    margin-bottom: 24px;
+}
+
+.erro {
+    color: #bf1736;
+    font-weight: 600;
+}

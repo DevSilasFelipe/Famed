@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, HttpCode, HttpStatus, Body, Req, Get, Param, ParseIntPipe, Res, StreamableFile } from "@nestjs/common";
+import { Controller, Post, UseGuards, HttpCode, HttpStatus, Body, Req, Get, Param, ParseIntPipe, Res, StreamableFile, BadRequestException, HttpException } from "@nestjs/common";
 import { JwtAuthGuard, JwtPayload } from "../auth/jwt-auth.guard";
 import { RolesGuard } from "../auth/roles.guard";
 import { Roles } from "../auth/roles.decorator";
@@ -10,6 +10,8 @@ import { EmitirReceitaDto } from "./dto/emitir-receita.dto";
 import { ReceitaPdfService } from "./receita-pdf.service";
 import type { Response } from "express";
 import { montarDadosPdf } from "./receita-pdf-dados";
+
+const FORMATO_TOKEN = /^[A-Za-z0-9]{6}$/;
 
 @Controller('receitas')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -48,6 +50,13 @@ export class ReceitaController {
         return receita;
     }
 
+    @Get('minhas')
+    @Roles('MEDICO', 'PACIENTE')
+    listarMinhas(@Req() req: Request & { user: JwtPayload }) {
+        return this.service.listarMinhas(req.user.sub, req.user.perfil);
+    }
+
+
     @Get(':id/pdf')
     @Roles('MEDICO', 'PACIENTE') // sobrescreve o @Roles('MEDICO') da classe
     async baixarPdf(
@@ -71,5 +80,45 @@ export class ReceitaController {
             'Content-Disposition': `inline; filename="receita-${leitura.receita.token}.pdf"`,
         });
         return new StreamableFile(arquivo);
+    }
+
+    @Get('token/:token')
+    @Roles('FARMACIA')
+    async buscarPorToken(
+        @Param('token') token: string,
+        @Req() req: Request & { user: JwtPayload },
+    ) {
+        let resultado: Awaited<ReturnType<ReceitaService['buscarPorToken']>>;
+
+        try {
+            if (!FORMATO_TOKEN.test(token)) {
+                throw new BadRequestException({ statusCode: 400, message: 'Token Inválido: use 6 letras ou números.' })
+            }
+            resultado = await this.service.buscarPorToken(token);
+        } catch (erro) {
+            await this.auditoria.registrar({
+                usuarioId: req.user.sub,
+                acao: 'CONSULTAR_TOKEN',
+                entidade: 'receita',
+                sucesso: false,
+                ip: req.ip,
+                detalhes: {
+                    token: token.slice(0, 20),
+                    status: erro instanceof HttpException ? erro.getStatus() : 500,
+                },
+            });
+            throw erro;
+        }
+
+        await this.auditoria.registrar({
+            usuarioId: req.user.sub,
+            acao: 'CONSULTAR_TOKEN',
+            entidade: 'receita',
+            entidadeId: resultado.id,
+            sucesso: true,
+            ip: req.ip,
+        });
+
+        return resultado;
     }
 }

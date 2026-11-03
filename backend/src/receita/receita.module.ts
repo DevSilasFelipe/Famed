@@ -7,9 +7,11 @@ import { AuditoriaModule } from "../auditoria/auditoria.module";
 import { ReceitaController } from "./receita.controller";
 import { ReceitaService } from "./receita.service";
 import { ReceitaPdfService } from "./receita-pdf.service";
+import { VwMinhasReceitasMedico } from "./views/vw-minhas-receitas-medico.view";
+import { VwMinhasReceitasPaciente } from "./views/vw-minhas-receitas-paciente.view";
 
 @Module({
-    imports    : [TypeOrmModule.forFeature([Receita, ItemReceita]), AuthModule, AuditoriaModule],
+    imports    : [TypeOrmModule.forFeature([Receita, ItemReceita, VwMinhasReceitasMedico, VwMinhasReceitasPaciente]), AuthModule, AuditoriaModule], 
     controllers: [ReceitaController],
     providers  : [ReceitaService, ReceitaPdfService],
 })

@@ -1,4 +1,4 @@
-import { post, baixarArquivo } from "./api";
+import { get, post, baixarArquivo } from "./api";
 
 /** Um medicamento como o backend espera receber. Campos opcionais devem ser omitidos, não enviados como null. */
 export interface ItemReceitaEnvio {
@@ -59,6 +59,61 @@ export interface ReceitaEmitida {
     hash        : string;
 }
 
+export type ListaControle = "C1" | "ANTIMICROBIANO" | "COMUM";
+
+/** Linha de GET /receitas/minhas quando quem pergunta é o MÉDICO. */
+export interface ReceitaDoMedico {
+    medicoId    : number;
+    receitaId   : number;
+    token       : string;
+    pacienteId  : number;
+    pacienteNome: string;
+    lista       : ListaControle;
+    usoContinuo : boolean;
+    emitidaEm   : string;        // data e hora em ISO
+    dataValidade: string | null; // AAAA-MM-DD
+    situacao    : string;        // hoje vem NAO_DISPENSADA em tudo: não exibir
+}
+
+/** Linha de GET /receitas/minhas quando quem pergunta é o PACIENTE. */
+export interface ReceitaDoPaciente {
+    pacienteId  : number;
+    receitaId   : number;
+    token       : string;
+    medicoNome  : string;
+    crm         : string;
+    crmUf       : string;
+    lista       : ListaControle;
+    usoContinuo : boolean;
+    emitidaEm   : string;
+    dataValidade: string | null;
+    situacao    : string;
+}
+
+export interface ReceitaParaFarmacia {
+    id          : number;
+    token       : string;
+    emitidaEm   : string;        // data e hora em ISO
+    dataValidade: string | null; // AAAA-MM-DD; COMUM não tem
+    vencida     : boolean;       // o backend calcula: hoje > dataValidade
+    usoContinuo : boolean;
+    lista       : { codigo: ListaControle; descricao: string };
+    medico      : { nome: string; crm: string; uf: string };
+    paciente    : { nome: string; cpf: string };
+    itens: {
+        nome             : string;
+        dosagem          : string;
+        formaFarmaceutica: string;
+        unidadeDose      : string;
+        quantidade       : number;
+        posologia        : string;
+    }[];
+}
+
+export function buscarReceitaPorToken(token: string, tokenAcesso?: string): Promise<ReceitaParaFarmacia> {
+    return get<ReceitaParaFarmacia>(`/receitas/token/${encodeURIComponent(token)}`, tokenAcesso);
+}
+
 export function emitirReceita(corpo: CorpoEmissao, token?: string): Promise<ReceitaEmitida> {
     return post<ReceitaEmitida>("/receitas", corpo, token);
 }
@@ -66,4 +121,13 @@ export function emitirReceita(corpo: CorpoEmissao, token?: string): Promise<Rece
 /** Baixa o PDF da receita (só o médico emissor e o paciente da receita conseguem). */
 export function baixarPdfReceita(id:number, token?: string): Promise<Blob> {
     return baixarArquivo(`/receitas/${id}/pdf`, token);
+}
+
+// É a mesma rota: o backend escolhe a view pelo perfil que está no token.
+export function listarMinhasReceitasMedico(token?: string): Promise<ReceitaDoMedico[]> {
+    return get<ReceitaDoMedico[]>("/receitas/minhas", token);
+}
+
+export function listarMinhasReceitasPaciente(token?: string): Promise<ReceitaDoPaciente[]> {
+    return get<ReceitaDoPaciente[]>("/receitas/minhas", token);
 }

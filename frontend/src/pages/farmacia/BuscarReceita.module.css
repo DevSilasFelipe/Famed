@@ -1,9 +1,14 @@
 .pagina {
     flex: 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    gap: 30px;
     padding: 40px 20px;
+}
+
+.centralizada {
+    justify-content: center;
 }
 
 .caixa {
@@ -43,6 +48,149 @@
 
 .seta:hover {
     transform: translateX(4px);
+}
+
+.seta:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+.mensagemErro {
+    font-size: 18px;
+    font-weight: 600;
+    color: #bf1736;
+}
+
+.receita {
+    width: 100%;
+    max-width: 950px;
+    background: #e9e8f8;
+    border-radius: 20px;
+    padding: 40px;
+    color: #1d1d1d;
+}
+
+.vencida {
+    background: #bf1736;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 700;
+    border-radius: 12px;
+    padding: 14px 20px;
+    margin-bottom: 24px;
+}
+
+.cabecalho {
+    margin-bottom: 24px;
+}
+
+.cabecalho h1 {
+    font-size: 32px;
+    margin-bottom: 14px;
+}
+
+.etiquetas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.etiqueta {
+    background-color: #dbae00;
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.etiquetaSuave {
+    background-color: #f4f3fd;
+    border: 2px solid #cfcdee;
+    border-radius: 999px;
+    padding: 4px 16px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.secao {
+    background-color: #f4f3fd;
+    border: 2px solid #cfcdee;
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 25px;
+}
+
+.secao h2 {
+    font-size: 22px;
+    margin-bottom: 16px;
+}
+
+.dados {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 10px 24px;
+    margin: 0;
+}
+
+.dados dt {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.dados dd {
+    margin: 0;
+    font-size: 18px;
+}
+
+.item + .item {
+    border-top: 1px solid #cfcdee;
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+.nomeItem {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 12px;
+}
+
+.acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.imprimir {
+    border: none;
+    background-color: #dbae00;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.novaBusca {
+    border: 2px solid #1d1d1d;
+    background: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@media print {
+    .naoImprimir {
+        display: none !important;
+    }
+
+    .receita {
+        background: #ffffff;
+        padding: 0;
+        max-width: none;
+    }
 }
 
 @media (max-width: 900px) {

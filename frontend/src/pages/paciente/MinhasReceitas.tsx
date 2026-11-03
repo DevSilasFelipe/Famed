@@ -1,12 +1,30 @@
 import ListaReceitas from "../../components/ListaReceitas";
 import type { ReceitaResumo } from "../../components/ListaReceitas";
-
-const receitas: ReceitaResumo[] = [
-    { id: 1, tipo: "antibiotico", nome: "Dr. Carlos Lima", token: "A1B2C3" },
-    { id: 2, tipo: "controlado", nome: "Dra. Paula Rocha", token: "D4E5F6" },
-    { id: 3, tipo: "comum", nome: "Dr. Carlos Lima", token: "G7H8I9" },
-];
+import { listarMinhasReceitasPaciente } from "../../api/receitas";
+import { useCarregamento } from "../../hooks/useCarregamento";
+import { useAbrirPdf } from "../../hooks/useAbrirPdf";
+import { tipoDaLista } from "../../utils/receitas";
 
 export default function MinhasReceitas() {
-    return <ListaReceitas receitas={receitas} rotulo="Médico" />;
+    const { dados, carregando, erro } = useCarregamento(listarMinhasReceitasPaciente);
+    const { abrirPdf, abrindoPdf, erro: erroPdf } = useAbrirPdf();
+
+    const receitas: ReceitaResumo[] = dados.map((r) => ({
+        id: r.receitaId,
+        tipo: tipoDaLista(r.lista),
+        nome: r.medicoNome,
+        token: r.token,
+    }));
+
+    return (
+        <ListaReceitas
+            receitas={receitas}
+            rotulo="Médico"
+            carregando={carregando}
+            erro={erro}
+            aoExpandir={abrirPdf}
+            abrindoPdf={abrindoPdf}
+            erroPdf={erroPdf}
+        />
+    );
 }

@@ -7,6 +7,8 @@ interface CardReceitaProps {
     rotulo: string;
     nome: string;
     token: string;
+    aoExpandir: () => void;
+    abrindo: boolean;
 }
 
 const titulos: Record<TipoReceita, string> = {
@@ -15,7 +17,7 @@ const titulos: Record<TipoReceita, string> = {
     comum: "Comum",
 };
 
-export default function CardReceita({ tipo, rotulo, nome, token }: CardReceitaProps) {
+export default function CardReceita({ tipo, rotulo, nome, token, aoExpandir, abrindo }: CardReceitaProps) {
     return (
     <div className={styles.card}>
         <div className={`${styles.faixa} ${styles[tipo]}`}></div>
@@ -28,7 +30,9 @@ export default function CardReceita({ tipo, rotulo, nome, token }: CardReceitaPr
             <p>Token: {token}</p>
         </div>
 
-        <button className={styles.expandir}>Expandir</button>
+        <button type="button" className={styles.expandir} onClick={aoExpandir} disabled={abrindo}>
+            {abrindo ? "Abrindo..." : "Expandir"}
+        </button>
         </div>
     </div>
     );
