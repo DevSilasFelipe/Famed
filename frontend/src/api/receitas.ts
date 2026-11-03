@@ -90,6 +90,30 @@ export interface ReceitaDoPaciente {
     situacao    : string;
 }
 
+export interface ReceitaParaFarmacia {
+    id          : number;
+    token       : string;
+    emitidaEm   : string;        // data e hora em ISO
+    dataValidade: string | null; // AAAA-MM-DD; COMUM não tem
+    vencida     : boolean;       // o backend calcula: hoje > dataValidade
+    usoContinuo : boolean;
+    lista       : { codigo: ListaControle; descricao: string };
+    medico      : { nome: string; crm: string; uf: string };
+    paciente    : { nome: string; cpf: string };
+    itens: {
+        nome             : string;
+        dosagem          : string;
+        formaFarmaceutica: string;
+        unidadeDose      : string;
+        quantidade       : number;
+        posologia        : string;
+    }[];
+}
+
+export function buscarReceitaPorToken(token: string, tokenAcesso?: string): Promise<ReceitaParaFarmacia> {
+    return get<ReceitaParaFarmacia>(`/receitas/token/${encodeURIComponent(token)}`, tokenAcesso);
+}
+
 export function emitirReceita(corpo: CorpoEmissao, token?: string): Promise<ReceitaEmitida> {
     return post<ReceitaEmitida>("/receitas", corpo, token);
 }

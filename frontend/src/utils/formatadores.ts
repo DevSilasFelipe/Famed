@@ -27,3 +27,8 @@ export function formatarCpf(cpf: string): string {
 export function formatarInstante(iso: string): string {
     return new Date(iso).toLocaleDateString("pt-BR");
 }
+
+export function formatarData(iso: string): string {
+    const [ano, mes, dia] = iso.split("-");
+    return `${dia}/${mes}/${ano}`;
+}
