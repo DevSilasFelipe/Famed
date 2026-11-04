@@ -200,6 +200,15 @@ export class ReceitaService {
         };
     }
 
+    /** PDF pedido pela farmácia: acha pelo token (diferencia maiúscula de minúscula). */
+    async buscarPdfPorToken(token: string) {
+        const receita = await this.dataSource.getRepository(Receita).findOneBy({ token });
+        if (!receita) {
+            throw new NotFoundException({ statusCode: 404, message: 'Receita não encontrada.' });
+        }
+        return this.carregarDetalhes(receita);
+    }
+
     // ---------------------------------------------------------------- internos
 
     private async carregarDetalhes(receita: Receita) {

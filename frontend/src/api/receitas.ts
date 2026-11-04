@@ -131,3 +131,8 @@ export function listarMinhasReceitasMedico(token?: string): Promise<ReceitaDoMed
 export function listarMinhasReceitasPaciente(token?: string): Promise<ReceitaDoPaciente[]> {
     return get<ReceitaDoPaciente[]>("/receitas/minhas", token);
 }
+
+/** PDF da receita para a farmácia, pedido pelo token da receita. */
+export function baixarPdfReceitaPorToken(token: string, tokenAcesso?: string): Promise<Blob> {
+    return baixarArquivo(`/receitas/token/${encodeURIComponent(token)}/pdf`, tokenAcesso);
+}

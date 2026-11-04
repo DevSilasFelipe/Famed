@@ -13,14 +13,3 @@ body {
 html {
   scroll-behavior: smooth;
 }
-
-@media print {
-  header,
-  footer {
-    display: none !important;
-  }
-
-  body {
-    background-color: #ffffff;
-  }
-}
