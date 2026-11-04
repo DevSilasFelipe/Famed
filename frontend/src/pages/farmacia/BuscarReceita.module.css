@@ -171,6 +171,11 @@
     cursor: pointer;
 }
 
+.imprimir:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
 .novaBusca {
     border: 2px solid #1d1d1d;
     background: none;
@@ -179,18 +184,6 @@
     font-size: 18px;
     font-weight: 600;
     cursor: pointer;
-}
-
-@media print {
-    .naoImprimir {
-        display: none !important;
-    }
-
-    .receita {
-        background: #ffffff;
-        padding: 0;
-        max-width: none;
-    }
 }
 
 @media (max-width: 900px) {

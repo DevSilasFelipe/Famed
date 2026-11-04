@@ -5,6 +5,7 @@ import { ErroApi } from "../../api/api";
 import { buscarReceitaPorToken } from "../../api/receitas";
 import type { ReceitaParaFarmacia } from "../../api/receitas";
 import { encerrarSessao, tokenLogado } from "../../auth/sessao";
+import { useAbrirPdf } from "../../hooks/useAbrirPdf";
 import { formatarCpf, formatarData, formatarInstante, somenteAlfanumericos } from "../../utils/formatadores";
 import styles from "./BuscarReceita.module.css";
 
@@ -19,6 +20,7 @@ export default function BuscarReceita() {
     const [receita, setReceita] = useState<ReceitaParaFarmacia | null>(null);
     const [carregando, setCarregando] = useState(false);
     const [erro, setErro] = useState("");
+    const { abrirPdfPorToken, abrindoPdf, erro: erroPdf, limparErro } = useAbrirPdf();
     const navigate = useNavigate();
 
     // Só tira símbolos. Não força maiúscula: o token diferencia maiúscula de minúscula.
@@ -29,6 +31,7 @@ export default function BuscarReceita() {
     async function buscar(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setErro("");
+        limparErro();
         setReceita(null);
         setCarregando(true);
         try {
@@ -49,12 +52,13 @@ export default function BuscarReceita() {
     function novaBusca() {
         setReceita(null);
         setErro("");
+        limparErro();
         setToken("");
     }
 
     return (
     <div className={`${styles.pagina} ${receita ? "" : styles.centralizada}`}>
-        <form className={`${styles.caixa} ${styles.naoImprimir}`} onSubmit={buscar}>
+        <form className={styles.caixa} onSubmit={buscar}>
         <input
             className={styles.campo}
             type="text"
@@ -73,7 +77,7 @@ export default function BuscarReceita() {
         </form>
 
         {erro && (
-            <p className={`${styles.mensagemErro} ${styles.naoImprimir}`} role="alert">{erro}</p>
+            <p className={styles.mensagemErro} role="alert">{erro}</p>
         )}
 
         {receita && (
@@ -139,9 +143,18 @@ export default function BuscarReceita() {
                     ))}
                 </section>
 
-                <div className={`${styles.acoes} ${styles.naoImprimir}`}>
-                    <button type="button" className={styles.imprimir} onClick={() => window.print()}>
-                        Imprimir
+                {erroPdf && (
+                    <p className={styles.mensagemErro} role="alert">{erroPdf}</p>
+                )}
+
+                <div className={styles.acoes}>
+                    <button
+                        type="button"
+                        className={styles.imprimir}
+                        onClick={() => abrirPdfPorToken(receita.token)}
+                        disabled={abrindoPdf}
+                    >
+                        {abrindoPdf ? "Abrindo..." : "Imprimir receita"}
                     </button>
                     <button type="button" className={styles.novaBusca} onClick={novaBusca}>
                         Nova busca

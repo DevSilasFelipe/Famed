@@ -121,4 +121,33 @@ export class ReceitaController {
 
         return resultado;
     }
+
+    @Get('token/:token/pdf')
+    @Roles('FARMACIA')
+    async baixarPdfPorToken(
+        @Param('token') token: string,
+        @Req() req: Request & { user: JwtPayload },
+        @Res({ passthrough: true }) res: Response,
+    ) {
+        if (!FORMATO_TOKEN.test(token)) {
+            throw new BadRequestException({ statusCode: 400, message: 'Token inválido: use 6 letras ou números.' });
+        }
+
+        const leitura = await this.service.buscarPdfPorToken(token);
+        const arquivo = await this.pdf.gerar(montarDadosPdf(leitura));
+
+        await this.auditoria.registrar({
+            usuarioId: req.user.sub,
+            acao: 'BAIXAR_PDF',
+            entidade: 'receita',
+            entidadeId: leitura.receita.id,
+            ip: req.ip,
+        });
+
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `inline; filename="receita-${leitura.receita.token}.pdf"`,
+        });
+        return new StreamableFile(arquivo);
+    }
 }
